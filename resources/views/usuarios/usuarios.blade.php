@@ -10,62 +10,112 @@
     {{--  CREAR USUARIO --}}
     <div class="card">
         <div class="card-header">
-            <h1>Administración de cuentas</h1>
+            <h1>Cuentas de Usuarios</h1>
             <br><br>
             <h4 class="card-title" style ="font-size: 2rem">Crear usuario</h4>
         </div>
         <div class="card-body">
-            <form id="formulario">
+            <form id="crearusuario">
                 @csrf
-                <div class="row">
-                    <div class="col">
-                        <label for="usuario">Nombre usuario:</label>
+                <div class="container">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="usuario">Nombre usuario:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="usuario" name="usuario" class="form-control" required>
+                        </div>
                     </div>
-                    <div class="col">
-                        <input type="text" id="usuario" required name="usuario" class="form-control"> <br><br>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="telefono">Telefono:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="number" id="telefono" name="telefono" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="tipo">Rol:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="tipo" name="tipo" class="form-control" required>
+                                <option value="1">Administrador</option>
+                                <option value="2">Supervision</option>
+                                <option value="3">Jefatura</option>
+                                <option value="4">Vendedor</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="contrasena">Contraseña generada:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="contrasena" name="contrasena" readonly class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="sucursal">Sucursal:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select name="sucursal" id="sucursal" class="form-control">
+                                @foreach ($idssucursales as $almacen)
+                                    <option value="{{ $almacen->id }}">{{ $almacen->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="hora_entrada">Hora de Entrada:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="hora_entrada" name="hora_entrada" class="form-control" required>
+                                <option value="09:00:00">09:00:00</option>
+                                <option value="10:00:00">10:00:00</option>
+                                <option value="11:00:00">11:00:00</option>
+                                <option value="11:00:00">14:00:00</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="hora_salida">Hora de salida:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="hora_salida" name="hora_salida" class="form-control" required>
+                                <option value="18:00:00">18:00:00</option>
+                                <option value="19:00:00">19:00:00</option>
+                                <option value="20:00:00">20:00:00</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="email">Email:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="submit" value="Crear" class="btn btn-success">
+                        </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label for="contrasena">Contraseña generada:</label>
-                    </div>
-                    <div class="col">
-                        <input type="text" id="contrasena" name="contrasena" readonly class="form-control"> <br><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label for="tipo">Tipo:</label>
-                    </div>
-                    <div class="col">
-                        <select id="tipo" name="tipo" class="form-control" required>
-                            <option value="1">Super Administrador</option>
-                            <option value="2">Administrador</option>
-                            <option value="3">Ejecutivo</option>
-                        </select><br><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label for="email">Email:</label>
-                    </div>
-                    <div class="col">
-                        <input type="email" id="email" required class="form-control" name="email"><br><br>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col">
-                        <input type="submit" value="Crear" class="btn btn-success">
-                    </div>
-                </div>
-
-
             </form>
+
         </div>
     </div>
     <br>
@@ -75,7 +125,7 @@
             <h1 class="card-title" style ="font-size: 2rem">Editar usuario</h1>
         </div>
         <div class="card-body">
-            <form id="actualizar">
+            <form id="actualizarusuario">
                 @csrf
                 <div class="row">
                     <div class="col">
@@ -132,7 +182,7 @@
             <h1 class="card-title" style ="font-size: 2rem">Eliminar usuario</h1>
         </div>
         <div class="card-body">
-            <form id="eliminar">
+            <form id="eliminarusuario">
                 @csrf
                 <div class="row">
                     <div class="col">
@@ -161,9 +211,9 @@
 @stop
 
 @section('css')
-<style>
+    <style>
 
-</style>
+    </style>
 @stop
 
 @section('js')
@@ -172,7 +222,7 @@
             generarContrasena();
             drawTriangles();
 
-            $('#formulario').submit(function(e) {
+            $('#crearusuario').submit(function(e) {
                 e.preventDefault(); // Evitar la recarga de la página
 
                 // Obtener los datos del formulario
@@ -180,7 +230,7 @@
 
                 // Realizar la solicitud AJAX con jQuery
                 $.ajax({
-                    url: '/guardar-usuario', // Ruta al controlador de Laravel
+                    url: '/crearusuario', // Ruta al controlador de Laravel
                     type: 'POST',
                     data: datosFormulario, // Enviar los datos del formulario
                     headers: {
@@ -206,7 +256,7 @@
                     }
                 });
             });
-            $('#actualizar').submit(function(e) {
+            $('#actualizarusuario').submit(function(e) {
                 e.preventDefault(); // Evitar la recarga de la página
 
                 // Obtener los datos del formulario
@@ -224,7 +274,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/actualizar-usuario', // Ruta al controlador de Laravel
+                            url: '/actualizarusuario', // Ruta al controlador de Laravel
                             type: 'POST',
                             data: datosFormulario, // Enviar los datos del formulario
                             headers: {
@@ -240,7 +290,8 @@
                             error: function(error) {
                                 Swal.fire(
                                     '¡Gracias por esperar!',
-                                    "Existe un error: " + error.responseJSON.message,
+                                    "Existe un error: " + error.responseJSON
+                                    .message,
                                     'error'
                                 )
                             }
@@ -251,7 +302,7 @@
                 })
 
             });
-            $('#eliminar').submit(function(e) {
+            $('#eliminarusuario').submit(function(e) {
                 e.preventDefault(); // Evitar la recarga de la página
 
                 // Obtener los datos del formulario
@@ -269,7 +320,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/eliminar', // Ruta al controlador de Laravel
+                            url: '/eliminarusuario', // Ruta al controlador de Laravel
                             type: 'POST',
                             data: datosFormulario, // Enviar los datos del formulario
                             headers: {
@@ -289,7 +340,8 @@
                             error: function(error) {
                                 Swal.fire(
                                     '¡Gracias por esperar!',
-                                    "Existe un error: " + error.responseJSON.message,
+                                    "Existe un error: " + error.responseJSON
+                                    .message,
                                     'error'
                                 )
                             }
@@ -333,14 +385,14 @@
             nuevaOpcion.value = "0";
             nuevaOpcion.text = "Sin seleccionar";
             select.insertBefore(nuevaOpcion, select.firstChild);
-            select.value=0;
+            select.value = 0;
 
             select2 = document.getElementById("tipo_actualizar");
             nuevaOpcion2 = document.createElement("option");
             nuevaOpcion2.value = "0";
             nuevaOpcion2.text = "Sin seleccionar";
             select2.insertBefore(nuevaOpcion2, select2.firstChild);
-            select2.value=0;
+            select2.value = 0;
 
             // Poner sin seleccionar en eliminar
             select3 = document.getElementById("id");
@@ -348,7 +400,7 @@
             nuevaOpcion3.value = "0";
             nuevaOpcion3.text = "Sin seleccionar";
             select3.insertBefore(nuevaOpcion3, select.firstChild);
-            select3.value=0;
+            select3.value = 0;
 
         });
 
