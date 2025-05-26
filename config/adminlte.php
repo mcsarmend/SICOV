@@ -325,11 +325,6 @@ return [
                             'url'  => 'remisionar',
                         ],
                         [
-                            'text' => 'Remisionar Lista',
-                            'icon' => 'fas fa-file-alt',
-                            'url'  => 'remisionarlista',
-                        ],
-                        [
                             'text' => 'Remisiones',
                             'icon' => 'fas fa-file-signature',
                             'url'  => 'remisiones',
@@ -341,18 +336,6 @@ return [
                         ],
                     ],
                 ],
-                // [
-                //     'text' => 'Pedidos',
-                //     'icon' => 'fas fa-shopping-cart',
-                //     'url' => '#',
-                //     'submenu' => [
-                //         [
-                //             'text' => 'Nuevo',
-                //             'icon' => 'fas fa-plus-circle',
-                //             'url' => 'altapedidos',
-                //         ],
-                //     ],
-                // ],
             ],
         ],
         [
@@ -388,21 +371,10 @@ return [
             'url'     => '#',
             'submenu' => [
                 [
-                    'text' => 'Multialmacen',
+                    'text' => 'Existencias',
                     'icon' => 'fas fa-dolly-flatbed',
-                    'url'  => 'multialmacen',
+                    'url'  => 'existencias',
                 ],
-                [
-                    'text' => 'Alta',
-                    'icon' => 'fas fa-plus-square',
-                    'url'  => 'altalmacen',
-                ],
-                [
-                    'text' => 'Baja',
-                    'icon' => 'fas fa-minus-square',
-                    'url'  => 'bajaalmacen',
-                ],
-
             ],
         ],
         [
@@ -421,11 +393,6 @@ return [
                             'icon' => 'fas fa-plus-square',
                         ],
                         [
-                            'text' => 'Multi Alta',
-                            'url'  => 'multialtainventario',
-                            'icon' => 'fas fa-file-import',
-                        ],
-                        [
                             'text' => 'Baja',
                             'url'  => 'bajainventario',
                             'icon' => 'fas fa-minus-square',
@@ -441,21 +408,6 @@ return [
                     'text'    => 'Movimientos inventario',
                     'icon'    => 'fas fa-user-friends',
                     'submenu' => [
-                        [
-                            'text' => 'Compras',
-                            'url'  => 'inventariocompras',
-                            'icon' => 'fas fa-shopping-bag',
-                        ],
-                        [
-                            'text' => 'Traspasos',
-                            'url'  => 'traspasos',
-                            'icon' => 'fas fa-exchange-alt',
-                        ],
-                        [
-                            'text' => 'Mermas',
-                            'url'  => 'inventariomermas',
-                            'icon' => 'fas fa-trash-alt',
-                        ],
                         [
                             'text' => 'Entrada',
                             'url'  => 'ingresoinventario',
@@ -502,43 +454,14 @@ return [
         ],
 
         [
-            'text'    => 'Proveedores',
-            'icon'    => 'fas fa-truck-loading',
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Alta',
-                    'url'  => 'altaproveedores',
-                    'icon' => 'fas fa-plus-square',
-                ],
-                [
-                    'text' => 'Baja',
-                    'url'  => 'bajaproveedores',
-                    'icon' => 'fas fa-minus-square',
-                ],
-                [
-                    'text' => 'Edición',
-                    'url'  => 'edicionproveedores',
-                    'icon' => 'fas fa-edit',
-                ],
-                [
-                    'text' => 'Lista',
-                    'url'  => 'reporteproveedoreslista',
-                    'icon' => 'fas fa-truck-loading',
-                ],
-
-            ],
-        ],
-
-        [
-            'text'    => 'Vendedores',
+            'text'    => 'Usuarios',
             'icon'    => 'fas fa-user-tie',
 
             'url'     => '#',
             'submenu' => [
                 [
-                    'text' => 'Vendedores',
-                    'url'  => 'vendedores',
+                    'text' => 'Usuarios',
+                    'url'  => 'usuarios',
                     'icon' => 'fas fa-user-tie',
                 ],
                 [
@@ -548,123 +471,13 @@ return [
                 ],
             ],
         ],
-        [
-            'text'    => 'Asistencias',
-            'icon'    => 'fas fa-user-tie',
 
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Registro Entrada',
-                    'url'  => 'registroentrada',
-                    'icon' => 'fas fas fa-clock',
-                ],
-                [
-                    'text' => 'Registro Salida',
-                    'url'  => 'registrosalida',
-                    'icon' => 'fas fa-sign-out-alt',
-                ],
-                [
-                    'text' => 'Asistencia',
-                    'url'  => 'asistenciapersonal',
-                    'icon' => 'fas fa-file-alt',
-                ],
-                [
-                    'text' => 'Asistencia General',
-                    'url'  => 'asistenciageneral',
-                    'icon' => 'fas fa-file',
-                ],
-                [
-                    'text' => 'Calendario',
-                    'url'  => 'calendario',
-                    'icon' => 'fas fa-calendar',
-                ],
-                [
-                    'text' => 'Vacaciones',
-                    'url'  => 'vacaciones',
-                    'icon' => 'fas fa-sun',
-                ],
-            ],
-        ],
-        [
-            'text'    => 'Precios',
-            'icon'    => 'fas fa-tag',
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Precios',
-                    'url'  => 'precios',
-                    'icon' => 'fas fa-tag',
-                ],
-                [
-                    'text' => 'Alta',
-                    'url'  => 'altaprecios',
-                    'icon' => 'fas fa-plus-square',
-                ],
-                [
-                    'text' => 'Baja',
-                    'url'  => 'bajaprecios',
-                    'icon' => 'fas fa-minus-square',
-                ],
-                [
-                    'text' => 'Edición',
-                    'url'  => 'edicionprecios',
-                    'icon' => 'fas fa-edit',
-                ],
-
-            ],
-        ],
 
         [
             'text'    => 'Reportes',
             'icon'    => 'fas fa-chart-bar',
             'url'     => '#',
             'submenu' => [
-                [
-                    'text'    => 'Movimientos',
-                    'icon'    => 'fas fa-user-friends',
-                    'submenu' => [
-                        [
-                            'text' => 'Compras',
-                            'url'  => 'reportemovimientoscompras',
-                            'icon' => 'fas fa-shopping-bag',
-                        ],
-                        [
-                            'text' => 'Traspasos',
-                            'url'  => 'reportemovimientostraspasos',
-                            'icon' => 'fas fa-exchange-alt',
-                        ],
-                        [
-                            'text' => 'Mermas',
-                            'url'  => 'reportemovimientosmermas',
-                            'icon' => 'fas fa-trash-alt'],
-                        [
-                            'text' => 'Entradas',
-                            'url'  => 'reportemovimientosentradas',
-                            'icon' => 'fas fa-sign-in-alt'],
-                        [
-                            'text' => 'Salidas',
-                            'url'  => 'reportemovimientossalidas',
-                            'icon' => 'fas fa-sign-out-alt'],
-                    ],
-                ],
-                [
-                    'text'    => 'Inventario',
-                    'icon'    => 'fas fa-archive',
-                    'submenu' => [
-                        [
-                            'text' => 'Lista de Precios',
-                            'url'  => 'reporteinventariolistaprecios',
-                            'icon' => 'fas fa-list-alt',
-                        ],
-                        [
-                            'text' => 'Existencias y costos actuales',
-                            'url'  => 'reporteinventarioexistenciascostos',
-                            'icon' => 'fas fa-boxes',
-                        ],
-
-                    ],
-                ],
                 [
                     'text'    => 'Remisiones',
                     'icon'    => 'fas fa-file-alt',
@@ -685,40 +498,7 @@ return [
 
             ],
         ],
-        [
-            'text'    => 'Tareas',
-            'icon'    => 'fas fa-tasks',
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Nueva',
-                    'icon' => 'fas fa-plus',
-                    'url'  => 'tareas',
-                ],
-                [
-                    'text' => 'Delegadas',
-                    'icon' => 'fas fa-user-cog',
-                    'url'  => 'tareasdelegadas',
-                ],
-            ],
-        ],
-        [
-            'text'    => 'Reconocimientos',
-            'icon'    => 'fas fa-trophy',
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Nueva',
-                    'icon' => 'fas fa-plus',
-                    'url'  => 'nuevoreconocimiento',
-                ],
-                [
-                    'text' => 'Reconocimientos',
-                    'icon' => 'fas fa-trophy',
-                    'url'  => 'reconocimientos',
-                ],
-            ],
-        ],
+
 
     ],
 

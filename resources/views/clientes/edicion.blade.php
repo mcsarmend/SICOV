@@ -182,18 +182,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <label for="price">Precio:</label>
-                                </div>
-                                <div class="col">
-                                    <select name="id_price" id="id_price" class="form-control">
-                                        @foreach ($prices as $price)
-                                            <option value="{{ encrypt($price->id) }}">{{ $price->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+
                             <br>
                             <div class="row">
                                 <div class="col">

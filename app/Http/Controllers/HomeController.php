@@ -26,7 +26,7 @@ class HomeController extends Controller
     {
 
         $type = Auth::user()->role;
-        $iduser = Auth::user()->id;
+
         return view('home', ['type' => $type]);
     }
 }

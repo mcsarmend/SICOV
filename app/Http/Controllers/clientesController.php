@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\address;
 use App\Models\clients;
-use App\Models\prices;
+
 use App\Models\warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +16,9 @@ class clientesController extends Controller
     public function altacliente()
     {
         $type = $this->gettype();
-        $prices = prices::all();
         $warehouse = warehouse::all();
 
-        return view('clientes.alta', ['type' => $type, 'prices' => $prices, 'warehouses' => $warehouse]);
+        return view('clientes.alta', ['type' => $type, 'warehouses' => $warehouse]);
     }
     public function bajacliente()
     {
@@ -30,9 +29,8 @@ class clientesController extends Controller
     public function clientes()
     {
         $type = $this->gettype();
-        $clients = clients::select('clients.id', 'clients.nombre', 'clients.telefono', 'warehouse.nombre as sucursal', 'prices.nombre as precio')
+        $clients = clients::select('clients.id', 'clients.nombre', 'clients.telefono', 'warehouse.nombre as sucursal')
             ->leftJoin('warehouse', 'clients.sucursal', '=', 'warehouse.id')
-            ->leftJoin('prices', 'clients.precio', '=', 'prices.id')
             ->get();
 
         return view('clientes.clientes', ['type' => $type, 'clients' => $clients]);
@@ -41,9 +39,9 @@ class clientesController extends Controller
     {
         $type = $this->gettype();
         $clients = clients::all();
-        $prices = prices::all();
+
         $sucursales = warehouse::all();
-        return view('clientes.edicion', ['type' => $type, 'clients' => $clients, 'prices' => $prices, 'sucursales' => $sucursales]);
+        return view('clientes.edicion', ['type' => $type, 'clients' => $clients, 'sucursales' => $sucursales]);
     }
     public function verdireccioncliente(Request $request)
     {
@@ -121,7 +119,7 @@ class clientesController extends Controller
             $idcliente = intval(Crypt::decrypt($request->id));
             $nuevo_nombre = $request->nombre;
             $idsucursal = intval(Crypt::decrypt($request->id_sucursal));
-            $idprecio = intval(Crypt::decrypt($request->id_price));
+
             $telefono = $request->telefono;
             $direccion1 = $request->direccion;
             $direccion2 = $request->direccion2;
@@ -133,9 +131,7 @@ class clientesController extends Controller
             if ($idsucursal) {
                 $cliente->sucursal = $idsucursal;
             }
-            if ($idprecio) {
-                $cliente->precio = $idprecio;
-            }
+
             if ($telefono) {
                 $cliente->telefono = $telefono;
             }
@@ -190,7 +186,10 @@ class clientesController extends Controller
 
             return response()->json(['message' => "Cliente actualizado correctamente"], 200);
         } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json([
+                'message' => 'Payload inválido',
+                'errors' => $th->getMessage()
+            ], 422);
         }
     }
 

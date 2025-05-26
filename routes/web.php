@@ -1,20 +1,10 @@
 <?php
 
 use App\Http\Controllers\adminsettingsController;
-use App\Http\Controllers\asistenciasController;
 use App\Http\Controllers\clientesController;
-use App\Http\Controllers\comprasController;
-use App\Http\Controllers\cuentasController;
 use App\Http\Controllers\dashboardController;
-use App\Http\Controllers\inventarioController;
-use App\Http\Controllers\multialmacenController;
-use App\Http\Controllers\pedidosController;
-use App\Http\Controllers\preciosController;
-use App\Http\Controllers\proveedoresController;
-use App\Http\Controllers\reconocimientosController;
-use App\Http\Controllers\reportesController;
 use App\Http\Controllers\usersController;
-use App\Http\Controllers\vendedorController;
+use App\Http\Controllers\reportController;
 use App\Http\Controllers\ventasController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +30,24 @@ Route::get('/politicaprivacidad', [dashboardController::class, 'politicaprivacid
 
 //Rutas
 
+
+//REMISIONES
+Route::get('remisionar', [ventasController::class, 'remisionar'])->middleware(['auth']);
+Route::get('remisionarlista', [ventasController::class, 'remisionarlista'])->middleware(['auth']);
+Route::get('remisiones', [ventasController::class, 'remisiones'])->middleware(['auth']);
+Route::get('ventasreportes', [ventasController::class, 'ventasreportes'])->middleware(['auth']);
+Route::get('verproductosremision', [ventasController::class, 'verproductosremision'])->middleware(['auth']);
+Route::get('cortedecaja', [ventasController::class, 'cortedecaja'])->middleware(['auth']);
+Route::get('buscarremision', [ventasController::class, 'buscarremision'])->middleware(['auth']);
+
+Route::post('enviarinfocortecaja', [ventasController::class, 'enviarinfocortecaja'])->middleware(['auth']);
+Route::post('buscarprecio', [ventasController::class, 'buscarprecio'])->middleware(['auth']);
+Route::post('buscaridprecio', [ventasController::class, 'buscaridprecio'])->middleware(['auth']);
+Route::post('buscarexistencias', [ventasController::class, 'buscarexistencias'])->middleware(['auth']);
+Route::post('validarremision', [ventasController::class, 'validarremision'])->middleware(['auth']);
+Route::post('cancelarremision', [ventasController::class, 'cancelarremision'])->middleware(['auth']);
+
+
 //CLIENTES
 Route::get('clientes', [clientesController::class, 'clientes'])->middleware(['auth']);
 Route::get('altacliente', [clientesController::class, 'altacliente'])->middleware(['auth']);
@@ -53,6 +61,8 @@ Route::post('editarcliente', [clientesController::class, 'editarcliente'])->midd
 
 
 
+// REPORTES
+Route::get('existencias', [reportController::class, 'existencias'])->middleware(['auth']);
 
 //OPCIONES
 Route::get('admin/settings', [adminsettingsController::class, 'index'])->middleware(['auth']);

@@ -21,7 +21,6 @@
                                 <th>Nombre</th>
                                 <th>Telefono</th>
                                 <th>Sucursal</th>
-                                <th>Precio</th>
                                 <th>Direcciones</th>
                             </tr>
                         </thead>
@@ -133,9 +132,7 @@
                     {
                         "data": "sucursal"
                     },
-                    {
-                        "data": "precio"
-                    },
+
                     {
                         "data": "direccion1",
                         "render": function(data, type, row) {

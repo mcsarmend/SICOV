@@ -101,19 +101,36 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <!-- Mensaje de error general -->
+                    <div id="loginError" class="alert alert-danger d-none">
+                        Credenciales incorrectas. Por favor, inténtalo de nuevo.
+                    </div>
 
                     <form id="loginForm" action="{{ route('login') }}" method="post">
                         @csrf
-                        <input type="email" class="form-control" name="email" placeholder="Email"
-                            value="{{ old('email') }}" required>
-                        <input type="password" class="form-control" name="password" placeholder="Password" required>
-                        <input type="submit" class="form-control" name="submit" value="Iniciar Sesión">
+                        <div class="mb-3">
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                name="email" placeholder="Email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                name="password" placeholder="Contraseña" required>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -128,6 +145,39 @@
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 <script>
+    @if ($errors->has('email') || $errors->has('password'))
+        $(document).ready(function() {
+            $('#loginModal').modal('show');
+        });
+    @endif
+
+    // Opcional: Manejar respuesta AJAX si usas fetch/axios
+    document.getElementById('loginForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new FormData(this)
+            });
+
+            if (!response.ok) {
+                const errors = await response.json();
+                if (response.status === 422) {
+                    document.getElementById('loginError').classList.remove('d-none');
+                }
+            } else {
+                window.location.reload(); // Redirigir si es exitoso
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
     $('#loginForm').submit(function(event) {
         event.preventDefault(); // Evita el comportamiento por defecto del formulario
         var form = $(this);

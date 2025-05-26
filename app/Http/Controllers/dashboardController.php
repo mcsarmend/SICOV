@@ -22,13 +22,15 @@ class dashboardController extends Controller
 
     public function showDashboard()
     {
+
+
         if (Auth::check()) {
 
             $type   = Auth::user()->role;
             $iduser = Auth::user()->id;
 
 
-            return view('home', ['type' => $type,]);
+            return view('home', ['type' => $type]);
         } else {
 
             return view('welcome', []);
