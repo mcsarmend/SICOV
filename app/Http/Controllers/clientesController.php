@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Crypt;
 
 class clientesController extends Controller
 {
+    public function preregistro()
+    {
+        $type = $this->gettype();
+        $warehouse = warehouse::all();
+
+        return view('clientes.preregistro', ['type' => $type, 'warehouses' => $warehouse]);
+    }
     public function altacliente()
     {
         $type = $this->gettype();

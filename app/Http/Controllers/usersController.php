@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\DB;
 class usersController extends Controller
 {
 
@@ -30,6 +30,22 @@ class usersController extends Controller
             ->get();
         $type = $this->gettype();
         return view('usuarios.usuarios', ['usuarios' => $usuarios, 'type' => $type, 'idssucursales' => $idssucursales]);
+    }
+        public function listausuarios()
+    {
+        $users = User::select(
+            'users.name as nombre',
+            'users.email as correo',
+            'users.pass as contrasena',
+            'users.phone as telefono',
+            'users.role as rol',
+            'warehouse.nombre as sucursal',
+            DB::raw('CASE WHEN users.status = 1 THEN "Activo" ELSE "Inactivo" END as estatus')
+        )
+            ->leftJoin('warehouse', 'users.warehouse', '=', 'warehouse.id')
+            ->get();
+        $type = $this->gettype();
+        return view('usuarios.lista', ['type' => $type, 'users' => $users]);
     }
 
     public function crearusuario(Request $request)

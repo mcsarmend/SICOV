@@ -13,7 +13,7 @@
         .hero-section {
             background: linear-gradient(135deg, #646263, #B20024);
             color: white;
-            padding: 100px 0;
+            padding: 20px 0;
         }
 
         .feature-icon {
@@ -43,9 +43,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
+                    {{-- <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li> --}}
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary ms-2" href="#" data-bs-toggle="modal"
                             data-bs-target="#loginModal">
@@ -60,11 +60,8 @@
     <!-- Hero Section -->
     <section class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 fw-bold">Transforma tu negocio</h1>
-            <p class="lead">La solución perfecta para optimizar tus procesos.</p>
-            <button class="btn btn-light btn-lg me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
-                <i class="fas fa-user"></i> Acceder
-            </button>
+            <h1 class="display-5 fw-bold">Transforma tu negocio</h1>
+            <img src="assets/images/logo.png" alt="Logo" style="height: 300px;">
         </div>
     </section>
 

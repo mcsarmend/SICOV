@@ -43,9 +43,8 @@
                         <div class="col-md-8">
                             <select id="tipo" name="tipo" class="form-control" required>
                                 <option value="1">Administrador</option>
-                                <option value="2">Supervision</option>
-                                <option value="3">Jefatura</option>
-                                <option value="4">Vendedor</option>
+                                <option value="2">Vendedor</option>
+                                <option value="3">Instructor</option>
                             </select>
                         </div>
                     </div>
@@ -72,32 +71,8 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="hora_entrada">Hora de Entrada:</label>
-                        </div>
-                        <div class="col-md-8">
-                            <select id="hora_entrada" name="hora_entrada" class="form-control" required>
-                                <option value="09:00:00">09:00:00</option>
-                                <option value="10:00:00">10:00:00</option>
-                                <option value="11:00:00">11:00:00</option>
-                                <option value="11:00:00">14:00:00</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="hora_salida">Hora de salida:</label>
-                        </div>
-                        <div class="col-md-8">
-                            <select id="hora_salida" name="hora_salida" class="form-control" required>
-                                <option value="18:00:00">18:00:00</option>
-                                <option value="19:00:00">19:00:00</option>
-                                <option value="20:00:00">20:00:00</option>
-                            </select>
-                        </div>
-                    </div>
+
 
                     <div class="row mb-3">
                         <div class="col-md-4">

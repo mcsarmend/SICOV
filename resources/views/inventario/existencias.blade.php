@@ -49,7 +49,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            // var products = @json($products);
+
             // $('#table-products').DataTable({
             //     destroy: true,
             //     scrollX: true,

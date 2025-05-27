@@ -6,6 +6,7 @@ use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\usersController;
 use App\Http\Controllers\reportController;
 use App\Http\Controllers\ventasController;
+use App\Http\Controllers\inventarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,7 @@ Route::post('cancelarremision', [ventasController::class, 'cancelarremision'])->
 
 //CLIENTES
 Route::get('clientes', [clientesController::class, 'clientes'])->middleware(['auth']);
+Route::get('preregistro', [clientesController::class, 'preregistro'])->middleware(['auth']);
 Route::get('altacliente', [clientesController::class, 'altacliente'])->middleware(['auth']);
 Route::get('bajacliente', [clientesController::class, 'bajacliente'])->middleware(['auth']);
 Route::get('edicioncliente', [clientesController::class, 'edicioncliente'])->middleware(['auth']);
@@ -63,6 +65,9 @@ Route::post('editarcliente', [clientesController::class, 'editarcliente'])->midd
 
 // REPORTES
 Route::get('existencias', [reportController::class, 'existencias'])->middleware(['auth']);
+Route::get('reporteremisiones', [reportController::class, 'reporteremisiones'])->middleware(['auth']);
+Route::get('reportecortecaja', [reportController::class, 'reportecortecaja'])->middleware(['auth']);
+
 
 //OPCIONES
 Route::get('admin/settings', [adminsettingsController::class, 'index'])->middleware(['auth']);
@@ -74,6 +79,23 @@ Route::post('actualizarusuario', [usersController::class, 'actualizarusuario']);
 Route::post('actualizarext', [usersController::class, 'actualizarext']);
 Route::post('eliminarusuario', [usersController::class, 'eliminarusuario']);
 Route::get('obtener-tipo', [usersController::class, 'obtenerTipo']);
+
+
+// Inventario
+Route::get('altainventario', [inventarioController::class, 'altainventario'])->middleware(['auth']);
+Route::get('bajainventario', [inventarioController::class, 'bajainventario'])->middleware(['auth']);
+Route::get('edicioninventario', [inventarioController::class, 'edicioninventario'])->middleware(['auth']);
+Route::get('ingresoinventario', [inventarioController::class, 'ingresoinventario'])->middleware(['auth']);
+Route::get('salidainventario', [inventarioController::class, 'salidainventario'])->middleware(['auth']);
+
+
+Route::get('usuarios', [usersController::class, 'usuarios']);
+Route::get('listausuarios', [usersController::class, 'listausuarios']);
+Route::post('crearusuario', [usersController::class, 'crearusuario']);
+Route::post('actualizarusuario', [usersController::class, 'actualizarusuario']);
+Route::post('actualizarext', [usersController::class, 'actualizarext']);
+Route::post('eliminarusuario', [usersController::class, 'eliminarusuario']);
+
 
 Auth::routes();
 
