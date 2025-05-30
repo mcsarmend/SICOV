@@ -8,7 +8,7 @@
 
 @section('content')
 
-<br>
+    <br>
     <div class="card">
         <div class="card-header bg-secondary">
             <h3 class="card-title" style="font-size: 1.5rem">Datos del Cliente</h3>
@@ -36,11 +36,13 @@
                         <div class="form-group">
                             <label>Servicios*</label>
                             <div class="form-check">
-                                <input class="form-check-input service-check" type="checkbox" id="gimnasio" name="servicios[]" value="gimnasio">
+                                <input class="form-check-input service-check" type="checkbox" id="gimnasio"
+                                    name="servicios[]" value="gimnasio">
                                 <label class="form-check-label" for="gimnasio">Gimnasio</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input service-check" type="checkbox" id="alberca" name="servicios[]" value="alberca">
+                                <input class="form-check-input service-check" type="checkbox" id="alberca"
+                                    name="servicios[]" value="alberca">
                                 <label class="form-check-label" for="alberca">Alberca</label>
                             </div>
                         </div>
@@ -51,7 +53,7 @@
                 <div id="gimnasioSection" style="display: none;">
                     <div class="card mt-3">
                         <div class="card-header bg-info">
-                            <h4 class="card-title">Datos Adicionales        </h4>
+                            <h4 class="card-title">Datos Adicionales </h4>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -73,7 +75,8 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="pkg4" value="4_clases_638" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="pkg4" value="4_clases_638"
+                                                class="form-check-input">
                                             <label for="pkg4" class="form-check-label">4 clases ($638)</label>
                                         </div>
                                     </div>
@@ -81,7 +84,8 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="pkg8" value="8_clases_951" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="pkg8" value="8_clases_951"
+                                                class="form-check-input">
                                             <label for="pkg8" class="form-check-label">8 clases ($951)</label>
                                         </div>
                                     </div>
@@ -89,7 +93,8 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="pkg12" value="12_clases_1270" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="pkg12"
+                                                value="12_clases_1270" class="form-check-input">
                                             <label for="pkg12" class="form-check-label">12 clases ($1,270)</label>
                                         </div>
                                     </div>
@@ -97,7 +102,8 @@
                                 <div class="col-md-4 mt-2">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="pkg16" value="16_clases_1501" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="pkg16"
+                                                value="16_clases_1501" class="form-check-input">
                                             <label for="pkg16" class="form-check-label">16 clases ($1,501)</label>
                                         </div>
                                     </div>
@@ -105,7 +111,8 @@
                                 <div class="col-md-4 mt-2">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="pkg20" value="20_clases_638" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="pkg20"
+                                                value="20_clases_638" class="form-check-input">
                                             <label for="pkg20" class="form-check-label">20 clases ($638)</label>
                                         </div>
                                     </div>
@@ -116,7 +123,8 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="combo1" value="1_clase_1050" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="combo1"
+                                                value="1_clase_1050" class="form-check-input">
                                             <label for="combo1" class="form-check-label">1 clase ($1,050)</label>
                                         </div>
                                     </div>
@@ -124,7 +132,8 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="combo2" value="2_clases_1350" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="combo2"
+                                                value="2_clases_1350" class="form-check-input">
                                             <label for="combo2" class="form-check-label">2 clases ($1,350)</label>
                                         </div>
                                     </div>
@@ -132,7 +141,8 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="combo3" value="3_clases_1350" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="combo3"
+                                                value="3_clases_1350" class="form-check-input">
                                             <label for="combo3" class="form-check-label">3 clases ($1,350)</label>
                                         </div>
                                     </div>
@@ -140,7 +150,8 @@
                                 <div class="col-md-4 mt-2">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="combo4" value="4_clases_1650" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="combo4"
+                                                value="4_clases_1650" class="form-check-input">
                                             <label for="combo4" class="form-check-label">4 clases ($1,650)</label>
                                         </div>
                                     </div>
@@ -148,7 +159,8 @@
                                 <div class="col-md-4 mt-2">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="combo5" value="5_clases_1950" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="combo5"
+                                                value="5_clases_1950" class="form-check-input">
                                             <label for="combo5" class="form-check-label">5 clases ($1,950)</label>
                                         </div>
                                     </div>
@@ -156,7 +168,8 @@
                                 <div class="col-md-4 mt-2">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="combo6" value="6_clases_2250" class="form-check-input">
+                                            <input type="radio" name="paquete_alberca" id="combo6"
+                                                value="6_clases_2250" class="form-check-input">
                                             <label for="combo6" class="form-check-label">6 clases ($2,250)</label>
                                         </div>
                                     </div>
@@ -171,31 +184,36 @@
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input horario-option" type="radio" name="horario_alberca" id="horario15" value="15-16" required>
+                                                    <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario15" value="15-16">
                                                     <label class="form-check-label" for="horario15">15:00 - 16:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input horario-option" type="radio" name="horario_alberca" id="horario16" value="16-17">
+                                                    <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario16" value="16-17">
                                                     <label class="form-check-label" for="horario16">16:00 - 17:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input horario-option" type="radio" name="horario_alberca" id="horario16" value="16-17">
+                                                    <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario16" value="16-17">
                                                     <label class="form-check-label" for="horario16">17:00 - 18:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input horario-option" type="radio" name="horario_alberca" id="horario18" value="18-19">
+                                                    <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario18" value="18-19">
                                                     <label class="form-check-label" for="horario18">18:00 - 19:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input horario-option" type="radio" name="horario_alberca" id="horario19" value="19-20">
+                                                    <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario19" value="19-20">
                                                     <label class="form-check-label" for="horario19">19:00 - 20:00</label>
                                                 </div>
                                             </div>
@@ -225,24 +243,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .package-option:hover {
             background-color: #f8f9fa;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .package-option.selected {
             background-color: #e2f0fd;
             border: 2px solid #0d6efd;
         }
+
         .form-check-label.selected {
             background-color: #e2f0fd;
             border-radius: 4px;
             padding: 8px;
         }
+
         .card-header {
             color: white;
             font-weight: bold;
         }
+
         .form-check-label {
             display: block;
             padding: 8px;
@@ -250,12 +273,15 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .form-check-label:hover {
             background-color: #f8f9fa;
         }
+
         #albercaSection .card-header {
             background-color: #17a2b8 !important;
         }
+
         #gimnasioSection .card-header {
             background-color: #6c757d !important;
         }
@@ -292,7 +318,7 @@
                 var albercaChecked = $('#alberca').is(':checked');
 
                 // Mostrar/ocultar secciones
-                $('#gimnasioSection').toggle(gimnasioChecked);
+                $('#gimnasioSection').toggle(gimnasioChecked || albercaChecked);
                 $('#albercaSection').toggle(albercaChecked);
 
                 // Mostrar paquetes adecuados
@@ -304,10 +330,15 @@
                     $('#comboPackages').hide();
                 }
 
-                // Validar campos requeridos
-                $('#observaciones').prop('required', gimnasioChecked && !albercaChecked);
+                // Actualizar campos requeridos
+                $('#observaciones').prop('required', gimnasioChecked || albercaChecked);
                 $('input[name="paquete_alberca"]').prop('required', albercaChecked);
                 $('input[name="horario_alberca"]').prop('required', albercaChecked);
+
+                // Si alberca no está seleccionada, quitar required de los horarios
+                if (!albercaChecked) {
+                    $('input[name="horario_alberca"]').prop('required', false);
+                }
             }
 
             // Manejar envío del formulario
@@ -315,6 +346,18 @@
                 e.preventDefault();
 
                 // Validar campos requeridos
+
+
+                if(!$('#alberca').is(':checked') && !$('#gimnasio').is(':checked')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Por favor selecciona al menos un servicio (Gimnasio o Alberca)'
+                    });
+                    return
+                }
+
+
                 if ($('#alberca').is(':checked')) {
                     if (!$('input[name="paquete_alberca"]:checked').val()) {
                         Swal.fire({
@@ -374,7 +417,8 @@
                                 let errorMessage = 'Error al guardar el cliente';
                                 if (xhr.responseJSON && xhr.responseJSON.errors) {
                                     errorMessage = '';
-                                    $.each(xhr.responseJSON.errors, function(key, value) {
+                                    $.each(xhr.responseJSON.errors, function(key,
+                                        value) {
                                         errorMessage += value + '\n';
                                     });
                                 }
