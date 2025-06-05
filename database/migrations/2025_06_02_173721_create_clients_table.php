@@ -24,6 +24,7 @@ class CreateClientsTable extends Migration
             $table->string('horario_alberca', 100)->nullable();
             $table->string('tipo', 100)->nullable();
             $table->string('idusuario', 100)->nullable();
+            $table->date('fecha_creacion')->nullable();
 
         });
     }

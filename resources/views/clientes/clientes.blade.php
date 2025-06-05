@@ -18,10 +18,18 @@
                     <table id=clientes class="table">
                         <thead>
                             <tr>
+                                <th>Numero</th>
                                 <th>Nombre</th>
                                 <th>Telefono</th>
-                                <th>Sucursal</th>
-                                <th>Direcciones</th>
+                                <th>Gimnasio</th>
+                                <th>Alberca</th>
+                                <th>Observaciones</th>
+                                <th>Paquete Alberca</th>
+                                <th>Horario Alberca</th>
+                                <th>Tipo</th>
+                                <th>Fecha de Creacion</th>
+                                <th>Estado</th>
+                                <th>Historial de pagos</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,23 +42,25 @@
     </div>
 
 
-    <div class="modal fade" id="direccion" tabindex="-1" role="dialog" aria-labelledby="direccionCenterTitle"
+
+
+    <div class="modal fade" id="historialpagos" tabindex="-1" role="dialog" aria-labelledby="historialpagosCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered custom-width " role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="direccionLongTitle">Detalle de direccion</h5>
+                    <h5 class="modal-title" id="historialpagosLongTitle">Detalle de Historial de Pagos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <table id="direcciontabla" class="table">
+                    <table id="historialpagostabla" class="table">
                         <thead>
                             <tr>
-                                <th>Direccion</th>
-                                <th>Latitud</th>
-                                <th>Longitud</th>
+                                <th>Fecha</th>
+                                <th>Cantidad</th>
+                                <th>Tipo de pago</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,7 +68,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 
                 </div>
             </div>
@@ -86,6 +96,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            drawTriangles();
             var clientes = @json($clients);
             $('#clientes').DataTable({
                 destroy: true,
@@ -124,35 +135,57 @@
                 },
                 "data": clientes,
                 "columns": [{
+                        "data": "id"
+                    },
+                    {
                         "data": "nombre"
                     },
                     {
                         "data": "telefono"
                     },
                     {
-                        "data": "sucursal"
+                        "data": "gimnasio"
                     },
-
                     {
-                        "data": "direccion1",
+                        "data": "alberca"
+                    },
+                    {
+                        "data": "observaciones"
+                    },
+                    {
+                        "data": "paquete_alberca"
+                    },
+                    {
+                        "data": "horario_alberca"
+                    },
+                    {
+                        "data": "tipo"
+                    },
+                    {
+                        "data": "fecha_creacion"
+                    },
+                    {
+                        "data": "status"
+                    },
+                    {
+                        "data": "id",
                         "render": function(data, type, row) {
                             return '<button onclick="ver(' + row.id +
-                                ')" class="btn btn-info">Ver</button>';
+                                ')" class="btn btn-primary">Ver</button>';
                         }
                     },
+
 
                 ]
             });
             drawTriangles();
-       //     showUsersSections();
+            //     showUsersSections();
         });
 
         function ver(id) {
-            $('#direccion').modal('show');
-
-
+            $('#historialpagos').modal('show');
             $.ajax({
-                url: 'verdireccioncliente', // URL a la que se hace la solicitud
+                url: 'historialpagos', // URL a la que se hace la solicitud
                 type: 'GET', // Tipo de solicitud (GET, POST, etc.)
                 data: {
                     id: id
@@ -160,7 +193,7 @@
 
                 dataType: 'json', // Tipo de datos esperados en la respuesta
                 success: function(data) {
-                    $('#direcciontabla').DataTable({
+                    $('#historialpagostabla').DataTable({
                         destroy: true,
                         scrollX: true,
                         scrollCollapse: true,
@@ -195,17 +228,16 @@
                                 columns: ':visible' // Exportar solo las columnas visibles
                             }
                         },
-                        "data": data.direccion,
+                        "data": data.productos,
                         "columns": [{
-                                "data": "direccion",
-                                "width": "300px"
+                                "data": "fecha"
                             },
                             {
-                                "data": "latitud"
+                                "data": "cantidad"
                             },
                             {
-                                "data": "longitud"
-                            }
+                                "data": "tipo"
+                            },
                         ]
                     });
                 }

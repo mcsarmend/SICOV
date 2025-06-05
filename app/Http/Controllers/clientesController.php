@@ -57,9 +57,28 @@ class clientesController extends Controller
     public function clientes()
     {
         $type = $this->gettype();
-        $clients = clients::select('clients.id', 'clients.nombre', 'clients.telefono', 'warehouse.nombre as sucursal')
-            ->leftJoin('warehouse', 'clients.sucursal', '=', 'warehouse.id')
-            ->get();
+        $clients = clients::select(
+            'clients.id',
+            'clients.nombre',
+            'clients.telefono',
+            'clients.gimnasio',
+            'clients.alberca',
+            'clients.observaciones',
+            'clients.tipo',
+            'clients.fecha_creacion',
+            'clients.status',
+            DB::raw('COALESCE(clients.paquete_alberca, "Sin paquete") as paquete_alberca'),
+            DB::raw('COALESCE(clients.horario_alberca, "Sin horario") as horario_alberca'),
+        )
+            ->orderBy('clients.id', 'desc')
+            ->get()
+            ->map(function ($item) {
+                // Transformar booleanos a texto
+                $item->gimnasio = $item->gimnasio ? 'Sí' : 'No';
+                $item->alberca = $item->alberca ? 'Sí' : 'No';
+                $item->status = $item->status ? 'Activo' : 'Inactivo';
+                return $item;
+            });
 
         return view('clientes.clientes', ['type' => $type, 'clients' => $clients]);
     }
@@ -168,10 +187,13 @@ class clientesController extends Controller
             $iduser = Auth::user()->id;
             $client->idusuario = intval($iduser);
             $client->tipo = $request->tipo_acceso;
+            $client->status = 1;
             $client->save();
 
+            $idpreregistro = $request->preregistro_id;
 
-            // Obtener el ID del cliente recién creado
+            $preregistro = preregistration::findOrFail($idpreregistro);
+            $preregistro->delete();
 
 
             return response()->json(['message' => 'Cliente creado correctamente'], 200);
@@ -183,12 +205,16 @@ class clientesController extends Controller
     public function eliminarcliente(Request $request)
     {
         try {
-            // Encuentra el usuario por su ID
+            // Encuentra el cliente por su ID
             $id = $request->id;
-
             $clientid = Crypt::decrypt($id);
-            clients::findOrFail($clientid)->delete();
-            return response()->json(['message' => 'cliente eliminado correctamente'], 200);
+
+            // Actualizar solo el campo status a 0
+            $client = clients::findOrFail($clientid);
+            $client->status = 0;
+            $client->save();
+
+            return response()->json(['message' => 'Estado del cliente actualizado correctamente'], 200);
         } catch (\Throwable $e) {
             // Devolver una respuesta de error
             return response()->json(['message' => $e->getMessage()], 500);
@@ -200,76 +226,53 @@ class clientesController extends Controller
         try {
             $idcliente = intval(Crypt::decrypt($request->id));
             $nuevo_nombre = $request->nombre;
-            $idsucursal = intval(Crypt::decrypt($request->id_sucursal));
-
             $telefono = $request->telefono;
-            $direccion1 = $request->direccion;
-            $direccion2 = $request->direccion2;
 
-            $cliente = clients::find($idcliente);
+            $cliente = clients::findOrFail($idcliente);
+
+            // Actualizar campos básicos
             if ($nuevo_nombre) {
                 $cliente->nombre = $nuevo_nombre;
-            }
-            if ($idsucursal) {
-                $cliente->sucursal = $idsucursal;
             }
 
             if ($telefono) {
                 $cliente->telefono = $telefono;
             }
+
+            // Actualizar servicios
+            $servicios = $request->servicios ?? [];
+            $tieneGimnasio = in_array("gimnasio", $servicios);
+            $tieneAlberca = in_array("alberca", $servicios);
+
+            $cliente->gimnasio = $tieneGimnasio ? 1 : 0;
+            $cliente->alberca = $tieneAlberca ? 1 : 0;
+
+            // Si tiene alberca, actualizar paquete y horario
+            if ($tieneAlberca) {
+                $cliente->paquete_alberca = $request->paquete_alberca;
+                $cliente->horario_alberca = $request->horario_alberca;
+            } else {
+                $cliente->paquete_alberca = null;
+                $cliente->horario_alberca = null;
+            }
+
+            // Actualizar observaciones si existen
+            if ($request->has('observaciones')) {
+                $cliente->observaciones = $request->observaciones;
+            }
+
+            // Actualizar tipo de acceso si existe
+            if ($request->has('tipo_acceso')) {
+                $cliente->tipo = $request->tipo_acceso;
+            }
+
             $cliente->save();
 
-            // Buscar la primera dirección del cliente
-            if ($direccion1) {
-                $direccionPrincipal = Address::where('idcliente', $idcliente)
-                    ->orderBy('id', 'asc')
-                    ->first();
-
-                if ($direccionPrincipal) {
-                    $direccionPrincipal->direccion = $direccion1;
-                    $direccionPrincipal->latitud = $request->latitud;
-                    $direccionPrincipal->longitud = $request->longitud;
-                    $direccionPrincipal->save();
-
-                } else {
-                    // Si no hay dirección principal, crear una nueva
-                    Address::create([
-                        'direccion' => $direccion1,
-                        'latitud' => $request->latitud,
-                        'longitud' => $request->longitud,
-                        'idcliente' => $idcliente,
-                    ]);
-                }
-            }
-
-            // Buscar la segunda dirección del cliente
-            if ($direccion2) {
-                $direccionSecundaria = Address::where('idcliente', $idcliente)
-                    ->orderBy('id', 'asc')
-                    ->skip(1)
-                    ->first();
-
-                if ($direccionSecundaria) {
-                    $direccionSecundaria->direccion = $direccion2;
-                    $direccionSecundaria->latitud = $request->latitud2;
-                    $direccionSecundaria->longitud = $request->longitud2;
-                    $direccionSecundaria->save();
-
-                } else {
-                    // Si no hay dirección principal, crear una nueva
-                    Address::create([
-                        'direccion' => $direccion2,
-                        'latitud' => $request->latitud2,
-                        'longitud' => $request->longitud2,
-                        'idcliente' => $idcliente,
-                    ]);
-                }
-            }
-
             return response()->json(['message' => "Cliente actualizado correctamente"], 200);
+
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => 'Payload inválido',
+                'message' => 'Error al actualizar el cliente',
                 'errors' => $th->getMessage()
             ], 422);
         }

@@ -3,470 +3,269 @@
 @section('title', 'Edición Cliente')
 
 @section('content_header')
-
 @stop
 
 @section('content')
     <div class="card">
-
         <div class="card-body">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="card-title" style ="font-size: 2rem">Editar cliente</h1>
+                    <h1 class="card-title" style="font-size: 2rem">Editar cliente</h1>
                 </div>
                 <div class="card-body">
-                    @if ($type == 4)
-                        <form id="editar">
-                            @csrf
-                            <div class="row">
-                                <div class="col">
-                                    <label for="usuario">Cliente:</label>
-                                </div>
-                                <div class="col">
-                                    <select name="id" id="id_actualizar" class="form-control">
-                                        @foreach ($clients as $client)
-                                            <option value="{{ encrypt($client->id) }}">{{ $client->nombre }}</option>
-                                        @endforeach
+                    <form id="editar">
+                        @csrf
+                        <div class="row">
+                            <div class="col">
+                                <label for="usuario">Cliente:</label>
+                            </div>
+                            <div class="col">
+                                <select name="id" id="id_actualizar" class="form-control">
+                                    @foreach ($clients as $client)
+                                        <option value="{{ encrypt($client->id) }}">{{ $client->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <label for="nombre">Nuevo nombre:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="nombre" name="nombre" class="form-control">
+                                <br>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <label for="telefono">Nuevo Teléfono:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="telefono" name="telefono" class="form-control">
+                                <br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="telefono">Tipo Cliente:</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" name="tipo_acceso" id="tipo_acceso">
+                                        <option value="1">Interno</option>
+                                        <option value="0">Externo</option>
                                     </select>
                                 </div>
-
                             </div>
+                        </div>
 
 
-                            <br>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="nombre">Nuevo nombre:</label>
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="nombre" name="nombre" class="form-control">
-                                    <br>
-                                </div>
-                            </div>
 
-
-                            <br>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="sucursal">Sucursal:</label>
-                                </div>
-                                <div class="col">
-                                    <select name="id_sucursal" id="id_sucursal" class="form-control">
-                                        @foreach ($sucursales as $sucursal)
-                                            <option value="{{ encrypt($sucursal->id) }}">{{ $sucursal->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <br>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="telefono">Telefono:</label>
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="telefono" name="telefono" class="form-control">
-                                    <br><br>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-
-                                    <div class="form-group">
-                                        <label for="direccion">Dirección:</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Servicios*</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input service-check" type="checkbox" id="gimnasio"
+                                            name="servicios[]" value="gimnasio">
+                                        <label class="form-check-label" for="gimnasio">Gimnasio</label>
                                     </div>
-                                    <div class="row">
+                                    <div class="form-check">
+                                        <input class="form-check-input service-check" type="checkbox" id="alberca"
+                                            name="servicios[]" value="alberca">
+                                        <label class="form-check-label" for="alberca">Alberca</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección Gimnasio -->
+                        <div id="gimnasioSection" style="display: none;">
+                            <div class="card mt-3">
+                                <div class="card-header bg-info">
+                                    <h4 class="card-title">Datos Adicionales </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="observaciones">Observaciones</label>
+                                        <input type="text" class="form-control" id="observaciones" name="observaciones">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección Alberca -->
+                        <!-- Sección Alberca -->
+                        <div id="albercaSection" style="display: none;">
+                            <div class="card mt-3">
+                                <div class="card-header bg-info">
+                                    <h4 class="card-title">Paquetes de Alberca (Por semana)</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="soloAlbercaPackages" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="soloAlbercaSelect">Paquete Solo Alberca</label>
+                                            <select class="form-control" id="soloAlbercaSelect" name="paquete_alberca">
+                                                <option value="4_clases_638">4 clases ($638)</option>
+                                                <option value="8_clases_951">8 clases ($951)</option>
+                                                <option value="12_clases_1270">12 clases ($1,270)</option>
+                                                <option value="16_clases_1501">16 clases ($1,501)</option>
+                                                <option value="20_clases_638">20 clases ($638)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="comboPackages" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="comboSelect">Paquete Combo (Gimnasio + Alberca)</label>
+                                            <select class="form-control" id="comboSelect" name="paquete_alberca">
+                                                <option value="1_clase_1050">1 clase ($1,050)</option>
+                                                <option value="2_clases_1350">2 clases ($1,350)</option>
+                                                <option value="3_clases_1350">3 clases ($1,350)</option>
+                                                <option value="4_clases_1650">4 clases ($1,650)</option>
+                                                <option value="5_clases_1950">5 clases ($1,950)</option>
+                                                <option value="6_clases_2250">6 clases ($2,250)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Selección de horarios -->
+                                    <div class="row mt-3">
                                         <div class="col-md-12">
-                                            <button type="button" class="btn btn-info mt-2" id="buscar-maps">Buscar en
-                                                Maps</button>
-                                        </div>
-                                    </div>
-                                    <br>
-
-                                </div>
-                                <div class="col">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="latitud">Latitud:</label>
-                                            <input type="text" id="latitud" name="latitud" class="form-control"
-                                                readonly>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="longitud">Longitud:</label>
-                                        <input type="text" id="longitud" name="longitud" class="form-control" readonly>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkSegundaDireccion">
-                                    <label class="form-check-label" for="checkSegundaDireccion">
-                                        ¿Agregar segunda dirección?
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-
-                                    <div id="segundaDireccion" style="display: none;">
-                                        <div class="form-group">
-                                            <label for="direccion2">Segunda Dirección:</label>
-                                            <input type="text" id="direccion2" name="direccion2" class="form-control">
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="button" class="btn btn-info mt-2" id="buscar-maps2">Buscar en
-                                                    Maps</button>
+                                            <h5>Horarios Disponibles para Alberca*</h5>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input horario-option" type="radio"
+                                                                name="horario_alberca" id="horario15" value="15-16">
+                                                            <label class="form-check-label" for="horario15">15:00 -
+                                                                16:00</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input horario-option" type="radio"
+                                                                name="horario_alberca" id="horario16" value="16-17">
+                                                            <label class="form-check-label" for="horario16">16:00 -
+                                                                17:00</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input horario-option" type="radio"
+                                                                name="horario_alberca" id="horario17" value="17-18">
+                                                            <label class="form-check-label" for="horario17">17:00 -
+                                                                18:00</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input horario-option" type="radio"
+                                                                name="horario_alberca" id="horario18" value="18-19">
+                                                            <label class="form-check-label" for="horario18">18:00 -
+                                                                19:00</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input horario-option" type="radio"
+                                                                name="horario_alberca" id="horario19" value="19-20">
+                                                            <label class="form-check-label" for="horario19">19:00 -
+                                                                20:00</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col" id="segundalatitud" style="display: none;">
-
-                                    <div class="form-group">
-                                        <label for="latitud2">Latitud 2:</label>
-                                        <input type="text" id="latitud2" name="latitud2" class="form-control" readonly>
-                                    </div>
-
-                                </div>
-                                <div class="col" id="segundalongitud" style="display: none;">
-                                    <div class="form-group">
-                                        <label for="longitud2">Longitud:</label>
-                                        <input type="text" id="longitud2" name="longitud2" class="form-control"
-                                            readonly>
-                                    </div>
-                                </div>
-
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="submit" value="Actualizar" class="btn btn-primary">
-                                </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <input type="submit" value="Actualizar" class="btn btn-primary">
                             </div>
-
-
-                        </form>
-                    @else
-                        <form id="editar">
-                            @csrf
-                            <div class="row">
-                                <div class="col">
-                                    <label for="usuario">Cliente:</label>
-                                </div>
-                                <div class="col">
-                                    <select name="id" id="id_actualizar" class="form-control">
-                                        @foreach ($clients as $client)
-                                            <option value="{{ encrypt($client->id) }}">{{ $client->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                            </div>
-
-
-                            <br>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="nombre">Nuevo nombre:</label>
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="nombre" name="nombre" class="form-control">
-                                    <br>
-                                </div>
-                            </div>
-
-
-                            <br>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="sucursal">Sucursal:</label>
-                                </div>
-                                <div class="col">
-                                    <select name="id_sucursal" id="id_sucursal" class="form-control">
-                                        @foreach ($sucursales as $sucursal)
-                                            <option value="{{ encrypt($sucursal->id) }}">{{ $sucursal->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <br>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="telefono">Telefono:</label>
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="telefono" name="telefono" class="form-control">
-                                    <br><br>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-
-                                    <div class="form-group">
-                                        <label for="direccion">Dirección:</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control">
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button type="button" class="btn btn-info mt-2" id="buscar-maps">Buscar en
-                                                Maps</button>
-                                        </div>
-                                    </div>
-                                    <br>
-
-                                </div>
-                                <div class="col">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="latitud">Latitud:</label>
-                                            <input type="text" id="latitud" name="latitud" class="form-control"
-                                                readonly>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="longitud">Longitud:</label>
-                                        <input type="text" id="longitud" name="longitud" class="form-control"
-                                            readonly>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkSegundaDireccion">
-                                    <label class="form-check-label" for="checkSegundaDireccion">
-                                        ¿Agregar segunda dirección?
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-
-                                    <div id="segundaDireccion" style="display: none;">
-                                        <div class="form-group">
-                                            <label for="direccion2">Segunda Dirección:</label>
-                                            <input type="text" id="direccion2" name="direccion2"
-                                                class="form-control">
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="button" class="btn btn-info mt-2" id="buscar-maps2">Buscar
-                                                    en
-                                                    Maps</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col" id="segundalatitud" style="display: none;">
-
-                                    <div class="form-group">
-                                        <label for="latitud2">Latitud 2:</label>
-                                        <input type="text" id="latitud2" name="latitud2" class="form-control"
-                                            readonly>
-                                    </div>
-
-                                </div>
-                                <div class="col" id="segundalongitud" style="display: none;">
-                                    <div class="form-group">
-                                        <label for="longitud2">Longitud:</label>
-                                        <input type="text" id="longitud2" name="longitud2" class="form-control"
-                                            readonly>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="submit" value="Actualizar" class="btn btn-primary">
-                                </div>
-                            </div>
-
-
-                        </form>
-                    @endif
-
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
     </div>
     @include('fondo')
 @stop
 
 @section('css')
-
 @stop
 
 @section('js')
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBl0IgYJqu-RST8MQ_iIPjHWWcazxsO0KA&libraries=places">
-    </script>
     <script>
-        document.getElementById('checkSegundaDireccion').addEventListener('change', function() {
-            var segundaDireccion = document.getElementById('segundaDireccion');
-            segundaDireccion.style.display = this.checked ? 'block' : 'none';
-            var segundalatitude = document.getElementById('segundalatitud');
-            segundalatitud.style.display = this.checked ? 'block' : 'none'
-
-            var segundalongitud = document.getElementById('segundalongitud');
-            segundalongitud.style.display = this.checked ? 'block' : 'none'
-        });
         $(document).ready(function() {
             drawTriangles();
-            showUsersSections();
-            initAutocomplete('direccion');
-            initAutocomplete('direccion2');
-
-            $('#buscar-maps').on('click', function() {
-                Swal.fire({
-                    title: 'Buscar en Google Maps',
-                    html: '<div id="map" style="height: 400px;"></div>',
-                    width: '800px',
-                    didOpen: () => {
-                        initMap('direccion');
-                    },
-                    preConfirm: () => {
-                        var center = map.getCenter();
-                        var lat = center.lat();
-                        var lng = center.lng();
-                        $('#latitud').val(lat);
-                        $('#longitud').val(lng);
-                        return direccion;
-                    }
-                });
+            // Manejar cambio en checkboxes de servicios
+            $('.service-check').change(function() {
+                updateSections();
             });
-            $('#buscar-maps2').on('click', function() {
-                Swal.fire({
-                    title: 'Buscar en Google Maps',
-                    html: '<div id="map" style="height: 400px;"></div>',
-                    width: '800px',
-                    didOpen: () => {
-                        initMap('direccion2');
+
+            $('#editar').submit(function(e) {
+                e.preventDefault();
+
+                var datosFormulario = $(this).serialize();
+
+                $.ajax({
+                    url: '/editarcliente',
+                    type: 'POST',
+                    data: datosFormulario,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    preConfirm: () => {
-                        var center = map.getCenter();
-                        var lat = center.lat();
-                        var lng = center.lng();
-                        $('#latitud2').val(lat);
-                        $('#longitud2').val(lng);
-                        return direccion;
+                    success: function(response) {
+                        Swal.fire(
+                            '¡Éxito!',
+                            response.message,
+                            'success'
+                        );
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 3000);
+                    },
+                    error: function(response) {
+                        Swal.fire(
+                            'Error',
+                            "Existe un error: " + response.responseJSON.message,
+                            'error'
+                        );
                     }
                 });
             });
         });
 
 
-        $('#editar').submit(function(e) {
-            e.preventDefault(); // Evitar la recarga de la página
+        function updateSections() {
+            var gimnasioChecked = $('#gimnasio').is(':checked');
+            var albercaChecked = $('#alberca').is(':checked');
 
-            // Obtener los datos del formulario
-            var datosFormulario = $(this).serialize();
+            // Mostrar/ocultar secciones
+            $('#gimnasioSection').toggle(gimnasioChecked || albercaChecked);
+            $('#albercaSection').toggle(albercaChecked);
 
-            // Realizar la solicitud AJAX con jQuery
-            $.ajax({
-                url: '/editarcliente', // Ruta al controlador de Laravel
-                type: 'POST',
-                // data: datosFormulario, // Enviar los datos del formulario
-                data: datosFormulario,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    Swal.fire(
-                        '¡Gracias por esperar!',
-                        response.message,
-                        'success'
-                    );
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 3000);
-
-                },
-                error: function(response) {
-                    Swal.fire(
-                        '¡Gracias por esperar!',
-                        "Existe un error: " + response.message,
-                        'error'
-                    )
-                }
-            });
-        });
-
-        function initAutocomplete(direction) {
-            const input = document.getElementById(direction);
-            const options = {
-                types: ['address'],
-                componentRestrictions: {
-                    country: 'mx'
-                }
-            };
-
-            const autocomplete = new google.maps.places.Autocomplete(input, options);
-            autocomplete.setFields(['address_components', 'formatted_address', 'geometry']);
-            autocomplete.addListener('place_changed', () => {
-                const place = autocomplete.getPlace();
-                if (!place.formatted_address || !place.geometry) return;
-
-                const direccion = place.formatted_address;
-                input.value = direccion;
-
-                if (place.geometry) {
-                    const lat = place.geometry.location.lat();
-                    const lng = place.geometry.location.lng();
-                    globallat = lat;
-                    globallng = lng;
-                }
-            });
-        }
-
-        function initMap(direction) {
-
-
-            direccion = $(direction).val();
-
-            if (direccion == '') {
-                Swal.fire({
-                    title: "¡No haz indicado una direccion!",
-                    icon: "info"
-                });
-                return;
+            // Mostrar paquetes adecuados
+            if (gimnasioChecked && albercaChecked) {
+                $('#soloAlbercaPackages').hide();
+                $('#comboPackages').show();
+            } else if (albercaChecked) {
+                $('#soloAlbercaPackages').show();
+                $('#comboPackages').hide();
             }
-            const ubicacion = {
-                lat: globallat,
-                lng: globallng
-            };
 
-            map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
-                center: ubicacion
-            });
-
-            marker = new google.maps.Marker({
-                position: ubicacion,
-                map: map,
-                draggable: true,
-                title: 'Ubicación'
-            });
-
-
-
-
-            google.maps.event.addListener(map, 'click', function(event) {
-                marker.setPosition(event.latLng);
-                const latLng = event.latLng;
-
-            });
+            // Actualizar campos requeridos
+            $('#observaciones').prop('required', gimnasioChecked || albercaChecked);
+            $('input[name="horario_alberca"]').prop('required', albercaChecked);
         }
     </script>
 @stop

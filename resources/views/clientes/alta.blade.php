@@ -51,6 +51,7 @@
                     <form id="clientForm">
                         @csrf
                         <div class="row">
+                            <input type="hidden" id="preregistro_id" name="preregistro_id" value="">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nombre">Nombre completo*</label>
@@ -118,7 +119,7 @@
                                         <div class="form-group">
                                             <label for="soloAlbercaSelect">Paquete Solo Alberca</label>
                                             <select class="form-control" id="soloAlbercaSelect" name="paquete_alberca">
-                                                <option value="">Seleccione un paquete</option>
+
                                                 <option value="4_clases_638">4 clases ($638)</option>
                                                 <option value="8_clases_951">8 clases ($951)</option>
                                                 <option value="12_clases_1270">12 clases ($1,270)</option>
@@ -132,7 +133,7 @@
                                         <div class="form-group">
                                             <label for="comboSelect">Paquete Combo (Gimnasio + Alberca)</label>
                                             <select class="form-control" id="comboSelect" name="paquete_alberca">
-                                                <option value="">Seleccione un paquete</option>
+
                                                 <option value="1_clase_1050">1 clase ($1,050)</option>
                                                 <option value="2_clases_1350">2 clases ($1,350)</option>
                                                 <option value="3_clases_1350">3 clases ($1,350)</option>
@@ -226,9 +227,9 @@
 @stop
 
 @section('js')
-@section('js')
     <script>
         $(document).ready(function() {
+            drawTriangles();
             var clientes = @json($preregistration);
 
             // Función para manejar el envío del formulario
@@ -384,6 +385,7 @@
             $('#clientForm')[0].reset();
             $('#gimnasioSection, #albercaSection').hide();
             $('#soloAlbercaPackages, #comboPackages').hide();
+            $('#preregistro_id').val(id);
 
             // Mostrar el modal
             $('#clienteNuevo').modal('show');
@@ -477,5 +479,5 @@
             });
         }
     </script>
-@stop
+
 @stop
