@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Doctrine\DBAL\Event\SchemaAlterTableRemoveColumnEventArgs;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class clients extends Model
+class preregistration extends Model
 {
     use HasFactory;
-    protected $table = 'clients';
+    protected $table = 'preregistration';
 
     protected $primary_key = 'id';
 
@@ -24,8 +23,7 @@ class clients extends Model
         'observaciones',
         'paquete_alberca',
         'horario_alberca',
-        'tipo',
-        'idusuario'
+        'idusuario',
     ];
 
     protected $guarded = [];

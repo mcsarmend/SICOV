@@ -199,8 +199,8 @@
                                             <div class="col-md-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input horario-option" type="radio"
-                                                        name="horario_alberca" id="horario16" value="16-17">
-                                                    <label class="form-check-label" for="horario16">17:00 - 18:00</label>
+                                                        name="horario_alberca" id="horario17" value="17-18">
+                                                    <label class="form-check-label" for="horario17">17:00 - 18:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
@@ -400,7 +400,7 @@
 
                         // Enviar datos al servidor
                         $.ajax({
-                            url: '/',
+                            url: '/precrearcliente',
                             type: 'POST',
                             data: $(this).serialize(),
                             success: function(response) {

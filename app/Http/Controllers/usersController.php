@@ -26,7 +26,7 @@ class usersController extends Controller
             ->where('status', '=', '1')
             ->get();
 
-        $idssucursales = warehouse::select('id', 'nombre')
+        $idssucursales = warehouse::select('id', 'name')
             ->get();
         $type = $this->gettype();
         return view('usuarios.usuarios', ['usuarios' => $usuarios, 'type' => $type, 'idssucursales' => $idssucursales]);

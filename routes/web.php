@@ -57,6 +57,8 @@ Route::get('bajacliente', [clientesController::class, 'bajacliente'])->middlewar
 Route::get('edicioncliente', [clientesController::class, 'edicioncliente'])->middleware(['auth']);
 Route::get('verdireccioncliente', [clientesController::class, 'verdireccioncliente'])->middleware(['auth']);
 
+Route::post('infopreregistro', [clientesController::class, 'infopreregistro'])->middleware(['auth']);
+Route::post('precrearcliente', [clientesController::class, 'precrearcliente'])->middleware(['auth']);
 Route::post('crearcliente', [clientesController::class, 'crearcliente'])->middleware(['auth']);
 Route::post('eliminarcliente', [clientesController::class, 'eliminarcliente'])->middleware(['auth']);
 Route::post('editarcliente', [clientesController::class, 'editarcliente'])->middleware(['auth']);

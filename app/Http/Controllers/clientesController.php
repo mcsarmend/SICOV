@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\address;
 use App\Models\clients;
-
+use App\Models\preregistration;
 use App\Models\warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+
 
 class clientesController extends Controller
 {
@@ -23,9 +25,28 @@ class clientesController extends Controller
     public function altacliente()
     {
         $type = $this->gettype();
-        $warehouse = warehouse::all();
+        $preregistration = preregistration::select([
+            'preregistration.id',
+            'preregistration.nombre',
+            'preregistration.telefono',
+            'preregistration.gimnasio',
+            'preregistration.alberca',
+            'preregistration.observaciones',
+            DB::raw('COALESCE(preregistration.paquete_alberca, "Sin paquete") as paquete_alberca'),
+            DB::raw('COALESCE(preregistration.horario_alberca, "Sin horario") as horario_alberca'),
+            'preregistration.idusuario',
+            DB::raw('COALESCE(users.name, "Sin asignar") as creado_por')
+        ])
+            ->leftJoin('users', 'preregistration.idusuario', '=', 'users.id')
+            ->get()
+            ->map(function ($item) {
+                // Transformar booleanos a texto
+                $item->gimnasio = $item->gimnasio ? 'Sí' : 'No';
+                $item->alberca = $item->alberca ? 'Sí' : 'No';
+                return $item;
+            });
 
-        return view('clientes.alta', ['type' => $type, 'warehouses' => $warehouse]);
+        return view('clientes.alta', ['type' => $type, 'preregistration' => $preregistration]);
     }
     public function bajacliente()
     {
@@ -61,50 +82,104 @@ class clientesController extends Controller
         }
     }
 
-    public function crearcliente(Request $request)
+    public function infopreregistro(Request $request) // ✅ Correcto
+    {
+        try {
+            $id = $request->input('id'); // o $request->id
+
+            $preregistration = preregistration::select([
+                'id',
+                'nombre',
+                'telefono',
+                'gimnasio',
+                'alberca',
+                'observaciones',
+                'paquete_alberca',
+                'horario_alberca',
+                'idusuario'
+            ])->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $preregistration
+            ], 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    public function precrearcliente(Request $request)
     {
 
         try {
 
             // Crear una nueva instancia del modelo Usuario
-            $cliente = new clients();
-            $cliente->nombre = $request->cliente;
-            $cliente->sucursal = intval($request->sucursal);
-            $cliente->telefono = $request->telefono;
-            $cliente->precio = intval($request->precio);
+            $preregistration = new preregistration();
+            $preregistration->nombre = $request->nombre;
+            $preregistration->telefono = $request->telefono;
+            $servicios = $request->servicios;
+            $tieneGimnasio = in_array("gimnasio", $servicios);
+            $tieneAlberca = in_array("alberca", $servicios);
+
+            if ($tieneGimnasio)
+                $preregistration->gimnasio = 1;
+            if ($tieneAlberca) {
+                $preregistration->alberca = 1;
+                $preregistration->paquete_alberca = $request->paquete_alberca;
+                $preregistration->horario_alberca = $request->horario_alberca;
+            }
+            $preregistration->observaciones = $request->observaciones;
             $iduser = Auth::user()->id;
-            $cliente->ejecutivo = intval($iduser);
+            $preregistration->idusuario = intval($iduser);
 
             // Guardar el usuario en la base de datos
-            $cliente->save();
-            $newdireccion = new address();
-            $newdireccion2 = new address();
+            $preregistration->save();
 
-            $newdireccion->idcliente = $cliente->id;
-            $newdireccion2->idcliente = $cliente->id;
-            $direccion1 = $request->direccion;
-            $direccion2 = $request->direccion2;
-            if ($direccion1) {
-                $newdireccion->direccion = $direccion1;
-                $newdireccion->latitud = $request->latitud;
-                $newdireccion->longitud = $request->longitud;
-                $newdireccion->save();
-            }
-            if ($direccion2) {
-                $newdireccion2->direccion = $direccion2;
-                $newdireccion2->latitud = $request->latitud2;
-                $newdireccion2->longitud = $request->longitud2;
-                $newdireccion2->save();
-            }
 
-            // Devolver una respuesta de éxito
+            return response()->json(['message' => 'Cliente pre-creado correctamente'], 200);
+        } catch (\Throwable $e) {
+            // Devolver una respuesta de error
+            return response()->json(['message' => 'Error al pre-crear el cliente: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function crearcliente(Request $request)
+    {
+        try {
+
+            $client = new clients();
+            $client->nombre = $request->nombre;
+            $client->telefono = $request->telefono;
+            $servicios = $request->servicios;
+            $tieneGimnasio = in_array("gimnasio", $servicios);
+            $tieneAlberca = in_array("alberca", $servicios);
+
+            if ($tieneGimnasio)
+                $client->gimnasio = 1;
+            if ($tieneAlberca) {
+                $client->alberca = 1;
+                $client->paquete_alberca = $request->paquete_alberca;
+                $client->horario_alberca = $request->horario_alberca;
+            }
+            $client->observaciones = $request->observaciones;
+            $iduser = Auth::user()->id;
+            $client->idusuario = intval($iduser);
+            $client->tipo = $request->tipo_acceso;
+            $client->save();
+
+
+            // Obtener el ID del cliente recién creado
+
+
             return response()->json(['message' => 'Cliente creado correctamente'], 200);
         } catch (\Throwable $e) {
             // Devolver una respuesta de error
             return response()->json(['message' => 'Error al crear el cliente: ' . $e->getMessage()], 500);
         }
     }
-
     public function eliminarcliente(Request $request)
     {
         try {

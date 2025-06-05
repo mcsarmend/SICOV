@@ -146,7 +146,7 @@
         var sum = 0;
         $(document).ready(function() {
             drawTriangles();
-            showUsersSections();
+          //  showUsersSections();
             var type = @json($type);
             if (type == 4) {
                 $("#tipo_precio").prop("disabled", true);

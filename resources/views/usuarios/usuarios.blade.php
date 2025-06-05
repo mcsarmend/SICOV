@@ -43,7 +43,7 @@
                         <div class="col-md-8">
                             <select id="tipo" name="tipo" class="form-control" required>
                                 <option value="1">Administrador</option>
-                                <option value="2">Vendedor</option>
+                                <option value="2">Facturas</option>
                                 <option value="3">Instructor</option>
                             </select>
                         </div>
@@ -65,7 +65,7 @@
                         <div class="col-md-8">
                             <select name="sucursal" id="sucursal" class="form-control">
                                 @foreach ($idssucursales as $almacen)
-                                    <option value="{{ $almacen->id }}">{{ $almacen->nombre }}</option>
+                                    <option value="{{ $almacen->id }}">{{ $almacen->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -102,50 +102,53 @@
         <div class="card-body">
             <form id="actualizarusuario">
                 @csrf
-                <div class="row">
-                    <div class="col">
-                        <label for="usuario">Usuario:</label>
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col">
+                            <label for="usuario">Usuario:</label>
+                        </div>
+                        <div class="col">
+                            <select name="id" id="id_actualizar" class="form-control">
+                                @foreach ($usuarios as $usuario)
+                                    <option value="{{ encrypt($usuario->id) }}">{{ $usuario->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                     </div>
-                    <div class="col">
-                        <select name="id" id="id_actualizar" class="form-control">
-                            @foreach ($usuarios as $usuario)
-                                <option value="{{ encrypt($usuario->id) }}">{{ $usuario->name }}</option>
-                            @endforeach
-                        </select>
+
+
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="contrasena">Nueva contraseña:</label>
+                        </div>
+                        <div class="col">
+                            <input type="text" id="contrasenaactualizar" name="contrasena" class="form-control">
+                            <br><br>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label for="tipo">Tipo:</label>
+                        </div>
+                        <div class="col">
+                            <select id="tipo_actualizar" name="tipo" class="form-control" required>
+                                <option value="1">Super Administrador</option>
+                                <option value="2">Administrador</option>
+                                <option value="3">Ejecutivo</option>
+                            </select><br><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input type="submit" value="Actualizar" class="btn btn-primary">
+                        </div>
                     </div>
 
                 </div>
-
-
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <label for="contrasena">Nueva contraseña:</label>
-                    </div>
-                    <div class="col">
-                        <input type="text" id="contrasenaactualizar" name="contrasena" class="form-control">
-                        <br><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label for="tipo">Tipo:</label>
-                    </div>
-                    <div class="col">
-                        <select id="tipo_actualizar" name="tipo" class="form-control" required>
-                            <option value="1">Super Administrador</option>
-                            <option value="2">Administrador</option>
-                            <option value="3">Ejecutivo</option>
-                        </select><br><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <input type="submit" value="Actualizar" class="btn btn-primary">
-                    </div>
-                </div>
-
 
             </form>
         </div>
@@ -159,23 +162,26 @@
         <div class="card-body">
             <form id="eliminarusuario">
                 @csrf
-                <div class="row">
-                    <div class="col">
-                        <label for="usuario">Usuario:</label>
-                    </div>
-                    <div class="col">
-                        <select name="id" id="id" class="form-control">
-                            @foreach ($usuarios as $usuario)
-                                <option value="{{ encrypt($usuario->id) }}">{{ $usuario->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="container">
 
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <input type="submit" value="Eliminar" class="btn btn-danger">
+                    <div class="row">
+                        <div class="col">
+                            <label for="usuario">Usuario:</label>
+                        </div>
+                        <div class="col">
+                            <select name="id" id="id" class="form-control">
+                                @foreach ($usuarios as $usuario)
+                                    <option value="{{ encrypt($usuario->id) }}">{{ $usuario->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <input type="submit" value="Eliminar" class="btn btn-danger">
+                        </div>
                     </div>
                 </div>
             </form>
