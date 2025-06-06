@@ -457,6 +457,19 @@ return [
             ],
 
         ],
+        [
+            'text' => 'Pagos',
+            'icon' => 'fas fa-money-bill-wave',
+            'url' => '#',
+            'submenu' => [
+                [
+                    'text' => 'Registro de Pagos',
+                    'url' => 'registropagos',
+                    'icon' => 'fas fa-cash-register',
+                ],
+            ],
+
+        ],
 
         [
             'text' => 'Usuarios',
@@ -470,7 +483,7 @@ return [
                     'icon' => 'fas fa-user-tie',
                 ],
                 [
-                    'text' => 'Liusta',
+                    'text' => 'Lista',
                     'url' => 'listausuarios',
                     'icon' => 'fas fa-edit',
                 ],

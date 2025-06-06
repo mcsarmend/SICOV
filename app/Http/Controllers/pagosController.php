@@ -6,14 +6,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use App\Models\clients;
+
 class pagosController extends Controller
 {
-    public function registrodepagos()
+    public function registropagos()
     {
 
         $type = $this->gettype();
-        return view('pagos.registrodepagos', ['type' => $type]);
+        $clients = clients::where('status', 1)->get();
+        return view('pagos.registrodepagos', ['type' => $type, 'clients' => $clients]);
     }
+
+
+
+
         public function gettype()
     {
         if (Auth::check()) {

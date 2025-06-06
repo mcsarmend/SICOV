@@ -17,28 +17,26 @@
                     <h1 class="card-title" style ="font-size: 2rem">Eliminar cliente</h1>
                 </div>
                 <div class="card-body">
-                    <form id="eliminar">
-                        @csrf
-                        <div class="row">
-                            <div class="col">
-                                <label for="almacen">Cliente:</label>
-                            </div>
-                            <div class="col">
-                                <select name="id" id="id" class="form-control">
-                                    @foreach ($clients as $client)
-                                        <option value="{{ encrypt($client->id) }}">{{ $client->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col">
-                                <input type="submit" value="Eliminar" class="btn btn-danger">
-                            </div>
-                        </div>
-                    </form>
+                    <table id=clientes class="table">
+                        <thead>
+                            <tr>
+                                <th>Numero</th>
+                                <th>Nombre</th>
+                                <th>Telefono</th>
+                                <th>Gimnasio</th>
+                                <th>Alberca</th>
+                                <th>Observaciones</th>
+                                <th>Paquete Alberca</th>
+                                <th>Horario Alberca</th>
+                                <th>Tipo</th>
+                                <th>Fecha de Creacion</th>
+                                <th>Estado</th>
+                                <th>Historial de pagos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -54,42 +52,142 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            clientes = @json($clients);
+            $('#clientes').DataTable({
+                destroy: true,
+                scrollX: true,
+                scrollCollapse: true,
+                "language": {
+                    "url": "{{ asset('js/datatables/lang/Spanish.json') }}"
+                },
+                "buttons": [
+                    'copy', 'excel', 'pdf', 'print'
+                ],
+                dom: 'Blfrtip',
+                destroy: true,
+                processing: true,
+                sort: true,
+                paging: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ], // Personalizar el menú de longitud de visualización
+
+                // Configurar las opciones de exportación
+                // Para PDF
+                pdf: {
+                    orientation: 'landscape', // Orientación del PDF (landscape o portrait)
+                    pageSize: 'A4', // Tamaño del papel del PDF
+                    exportOptions: {
+                        columns: ':visible' // Exportar solo las columnas visibles
+                    }
+                },
+                // Para Excel
+                excel: {
+                    exportOptions: {
+                        columns: ':visible' // Exportar solo las columnas visibles
+                    }
+                },
+                "data": clientes,
+                "columns": [{
+                        "data": "id"
+                    },
+                    {
+                        "data": "nombre"
+                    },
+                    {
+                        "data": "telefono"
+                    },
+                    {
+                        "data": "gimnasio"
+                    },
+                    {
+                        "data": "alberca"
+                    },
+                    {
+                        "data": "observaciones"
+                    },
+                    {
+                        "data": "paquete_alberca"
+                    },
+                    {
+                        "data": "horario_alberca"
+                    },
+                    {
+                        "data": "tipo"
+                    },
+                    {
+                        "data": "fecha_creacion"
+                    },
+                    {
+                        "data": "status"
+                    },
+                    {
+                        "data": "id",
+                        "render": function(data, type, row) {
+                            return '<button onclick="eliminar(' + row.id +
+                                ')" class="btn btn-danger">Eliminar</button>';
+                        }
+                    },
+
+
+                ]
+            });
+
+
             drawTriangles();
-        //    showUsersSections();
+            //    showUsersSections();
         });
-        $('#eliminar').submit(function(e) {
-            e.preventDefault(); // Evitar la recarga de la página
 
-            // Obtener los datos del formulario
-            var datosFormulario = $(this).serialize();
+        function eliminar(id) {
+            // Mostrar loader mientras se procesa
+            Swal.fire({
+                title: 'Procesando',
+                html: 'Por favor espera mientras guardamos la información...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-            // Realizar la solicitud AJAX con jQuery
+            data = {
+                id: id
+            }
             $.ajax({
-                url: '/eliminarcliente', // Ruta al controlador de Laravel
+                url: 'eliminarcliente',
                 type: 'POST',
-                // data: datosFormulario, // Enviar los datos del formulario
-                data: datosFormulario,
+                data: data,
+                dataType: 'json',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    Swal.fire(
-                        '¡Gracias por esperar!',
-                        response.message,
-                        'success'
-                    );
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 3000);
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        willClose: () => {
+                            window.location.reload();
+                        }
+                    });
                 },
-                error: function(response) {
-                    Swal.fire(
-                        '¡Gracias por esperar!',
-                        "Existe un error: " + response.message,
-                        'error'
-                    )
+                error: function(xhr) {
+                    let errorMessage = xhr.responseJSON && xhr.responseJSON.error ?
+                        xhr.responseJSON.error :
+                        'Ocurrió un error al procesar la solicitud';
+
+                    Swal.fire({
+                        title: 'Error',
+                        text: errorMessage,
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                    });
                 }
             });
-        });
-    </script>
+        }
+
+
+       </script>
 @stop

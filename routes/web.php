@@ -7,6 +7,7 @@ use App\Http\Controllers\usersController;
 use App\Http\Controllers\reportController;
 use App\Http\Controllers\ventasController;
 use App\Http\Controllers\inventarioController;
+use App\Http\Controllers\pagosController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -66,8 +67,9 @@ Route::post('editarcliente', [clientesController::class, 'editarcliente'])->midd
 
 
 // PAGOS
-Route::get('historialpagos', [clientesController::class, 'historialpagos'])->middleware(['auth']);
+Route::get('registropagos', [pagosController::class, 'registropagos'])->middleware(['auth']);
 
+Route::post('historialpagos', [pagosController::class, 'historialpagos'])->middleware(['auth']);
 
 // REPORTES
 Route::get('existencias', [reportController::class, 'existencias'])->middleware(['auth']);
