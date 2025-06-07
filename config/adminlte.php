@@ -463,9 +463,14 @@ return [
             'url' => '#',
             'submenu' => [
                 [
-                    'text' => 'Registro de Pagos',
+                    'text' => 'Registrar pago',
                     'url' => 'registropagos',
                     'icon' => 'fas fa-cash-register',
+                ],
+                [
+                    'text' => 'Historico de pagos',
+                    'url' => 'historicodepagos',
+                    'icon' => 'fas fa-clipboard-list',
                 ],
             ],
 

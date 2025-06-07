@@ -182,7 +182,7 @@
                 e.preventDefault();
 
                 $.ajax({
-                    url: '/guardarpago',
+                    url: '/registrarpago',
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {

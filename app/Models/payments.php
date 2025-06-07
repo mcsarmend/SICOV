@@ -23,7 +23,8 @@ class payments extends Model
         'metodo_pago',
         'idusuario',
         'observaciones',
-        'mes_correspondiente'
+        'mes_correspondiente',
+        'estatus'
     ];
 
     protected $guarded = [];

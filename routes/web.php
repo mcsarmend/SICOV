@@ -68,7 +68,9 @@ Route::post('editarcliente', [clientesController::class, 'editarcliente'])->midd
 
 // PAGOS
 Route::get('registropagos', [pagosController::class, 'registropagos'])->middleware(['auth']);
+Route::get('historicodepagos', [pagosController::class, 'historicodepagos'])->middleware(['auth']);
 
+Route::post('registrarpago', [pagosController::class, 'registrarpago'])->middleware(['auth']);
 Route::post('historialpagos', [pagosController::class, 'historialpagos'])->middleware(['auth']);
 
 // REPORTES
