@@ -285,6 +285,18 @@
             doc.text(formaPago, 10, yPosition + 4);
             yPosition += 8;
 
+            //Mes Correspondiente
+            doc.setFont('helvetica', 'bold');
+            doc.text('MES CORRESPONDIENTE:', 10, yPosition);
+            doc.setFont('helvetica', 'normal');
+            const mes_correspondiente = rowData.mes_correspondiente.toUpperCase(); // Convertir a mayúsculas
+            doc.text(mes_correspondiente, 10, yPosition + 4);
+            yPosition += 8;
+
+
+
+
+
             // Línea divisoria
             doc.line(5, yPosition, pageWidth - 5, yPosition);
             yPosition += 5;
