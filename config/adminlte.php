@@ -16,7 +16,7 @@ return [
 
     'title' => '',
     'title_prefix' => '',
-    'title_postfix' => '| SICOV',
+    'title_postfix' => '| SIGAC',
 
     /*
     |--------------------------------------------------------------------------
@@ -63,7 +63,7 @@ return [
     |
      */
 
-    'logo' => '<b>SICOV</b>Net',
+    'logo' => '<b>SIGAC</b>Net',
     'logo_img' => 'assets/images/logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,

@@ -8,62 +8,75 @@
 @section('content')
     <br>
     <div class="card">
-        <div class="card-header">
-            <h1>Registro de Asistencia/Salida</h1>
+        <div class="card-header ">
+            <h1 class="text-black"><i class="fas fa-door-open mr-2"></i>Sistema Integral de Gestión de Asistencias y Comercio</h1>
         </div>
         <div class="card-body" style="width: 100%">
-            <!-- Fecha actual -->
-            <div class="text-center mb-4">
-                <h2 id="current-date" style="font-size: 2rem; font-weight: bold;"></h2>
-            </div>
-
-            <div class="row align-items-end">
+            <div class="row">
+                <!-- Columna izquierda -->
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="clienteInput">Buscar Cliente:</label>
-                        <div class="input-group">
-                            <input type="text" id="clienteInput" class="form-control"
-                                placeholder="Escriba el nombre del cliente...">
-                            <input type="hidden" id="clienteId" name="idcliente">
-                            <input type="hidden" id="clienteNombre" name="nombrecliente">
+                    <div class="info-box bg-gradient-success">
+                        <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Clientes Registrados</span>
+                            <span class="info-box-number">{{ $totalClientes }} / {{ $metaClientes }} </span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: {{ ($totalClientes / $metaClientes) * 100 }}%"></div>
+                            </div>
+                            <span class="progress-description">
+                                {{ number_format(($totalClientes / $metaClientes) * 100, 0) }}% de la meta anual
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card card-widget widget-user-2">
+                        <div class="widget-user-header bg-info">
+                            <h3 class="widget-user-username">Asistencias Hoy</h3>
+                            <h5 class="widget-user-desc">{{ $asistenciasHoy }} registros</h5>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Columna derecha -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-line mr-2"></i>Estadísticas Rápidas</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="small-box bg-gradient-indigo">
+                                        <div class="inner">
+                                            <h3>{{ $clientesActivos }}</h3>
+                                            <p>Clientes Activos</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-user-check"></i>
+                                        </div>
+                                        <a href="{{ route('clientes.index') }}" class="small-box-footer">
+                                            Más info <i class="fas fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <h5><i class="icon fas fa-bullhorn"></i> Noticias Recientes</h5>
+                                <ul>
+                                    <li>Nuevo horario de clases los viernes</li>
+                                    <li>Promoción especial para renovaciones</li>
+                                    <li>Sistema actualizado el {{ now()->format('d/m/Y') }}</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="invisible">.</label>
-                        <button class="btn btn-primary btn-block" id="registrarAsistencia">Registrar Entrada</button>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="invisible">.</label>
-                        <button class="btn btn-danger btn-block" id="registrarSalida">Registrar Salida</button>
-                    </div>
-                </div>
             </div>
 
-            <br><br><br>
 
-            <!-- Tabla de asistencias -->
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped" id = "atendanceTable">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Número de Cliente</th>
-                            <th>Hora de Registro</th>
-                            <th>Clases Restantes</th>
-                            <th>Tiempo Transcurrido</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-
-
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
     @include('fondo')
@@ -71,388 +84,60 @@
 
 @section('css')
     <style>
-        #current-date {
-            color: #2c3e50;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        .info-box {
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .select2-container {
-            width: 100% !important;
+        .info-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .select2-selection {
-            height: 38px !important;
-            padding-top: 5px !important;
+        .small-box {
+            transition: all 0.3s;
         }
 
-        .badge {
-            font-size: 0.9rem;
-            padding: 0.5em 0.75em;
+        .small-box:hover {
+            transform: scale(1.03);
         }
 
-        .table th {
-            background-color: #343a40;
-            color: white;
+        .products-list .product-img {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .registrar-salida-btn {
-            font-size: 0.8rem;
-            padding: 0.25rem 0.5rem;
-        }
-
-        .bg-success-light {
-            background-color: rgba(40, 167, 69, 0.2) !important;
-        }
-
-        .bg-warning-light {
-            background-color: rgba(255, 193, 7, 0.2) !important;
-        }
-
-        .bg-danger-light {
-            background-color: rgba(220, 53, 69, 0.2) !important;
-        }
-
-        /* Estilo para la tabla */
-        #attendanceTable tbody tr:hover {
-            background-color: rgba(0, 0, 0, 0.05) !important;
+        .product-title {
+            font-weight: 600;
         }
     </style>
 @stop
 
 @section('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Mostrar fecha actual
+
             drawTriangles();
+            // Mostrar fecha actual
+            $('#current-date').text(new Date().toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }));
 
-            updateCurrentDate();
-
-            // Configuración del DataTable
-            var table = $('#attendanceTable').DataTable({
-                processing: true,
-                serverSide: false,
-                responsive: true,
-                data: @json($attendances),
-                columns: [{
-                        data: 'client.nombre',
-                        name: 'client.nombre',
-                        title: 'Nombre'
-                    },
-                    {
-                        data: 'client.id',
-                        name: 'client.id',
-                        title: 'Número de Cliente'
-                    },
-                    {
-                        data: 'check_in',
-                        name: 'check_in',
-                        title: 'Hora de Registro',
-                        render: function(data) {
-                            return new Date(data).toLocaleTimeString('es-MX');
-                        }
-                    },
-                    {
-                        data: 'classes_remaining',
-                        name: 'classes_remaining',
-                        title: 'Clases Restantes'
-                    },
-                    {
-                        data: 'check_in',
-                        name: 'tiempo_transcurrido',
-                        title: 'Tiempo Transcurrido',
-                        render: function(data, type, row) {
-                            return calculateElapsedTime(data);
-                        }
-                    }
-                ],
-                createdRow: function(row, data, dataIndex) {
-                    // Aplicar clases según el tiempo transcurrido
-                    var checkInTime = new Date(data.check_in);
-                    var now = new Date();
-                    var diffMs = now - checkInTime;
-                    var diffMins = Math.round(diffMs / 60000);
-
-                    if (diffMins < 45) { // Menos de 45 minutos (verde)
-                        $(row).addClass('bg-success-light');
-                    } else if (diffMins >= 45 && diffMins < 55) { // 45-55 minutos (amarillo)
-                        $(row).addClass('bg-warning-light');
-                    } else { // 55+ minutos (rojo)
-                        $(row).addClass('bg-danger-light');
-                    }
-                },
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
-                }
-            });
-
-            // Función para calcular el tiempo transcurrido
-            function calculateElapsedTime(checkInTime) {
-                var now = new Date();
-                var checkIn = new Date(checkInTime);
-                var diffMs = now - checkIn;
-                var diffMins = Math.round(diffMs / 60000);
-
-                return diffMins + ' minutos';
-            }
-
-            // Actualizar el tiempo cada minuto
+            // Actualizar cada minuto (opcional)
             setInterval(function() {
-                table.rows().every(function() {
-                    var data = this.data();
-                    var checkInTime = new Date(data.check_in);
-                    var now = new Date();
-                    var diffMs = now - checkInTime;
-                    var diffMins = Math.round(diffMs / 60000);
-
-                    // Actualizar el texto del tiempo
-                    $(this.node()).find('td:eq(4)').text(diffMins + ' minutos');
-
-                    // Actualizar las clases según el tiempo
-                    $(this.node()).removeClass('bg-success-light bg-warning-light bg-danger-light');
-
-                    if (diffMins < 45) {
-                        $(this.node()).addClass('bg-success-light');
-                    } else if (diffMins >= 45 && diffMins < 55) {
-                        $(this.node()).addClass('bg-warning-light');
-                    } else {
-                        $(this.node()).addClass('bg-danger-light');
-                    }
-                });
-            }, 60000); // Actualizar cada minuto
-
-            // Resto de tu código existente...
-        });
-
-        function updateCurrentDate() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            $('#current-date').text(now.toLocaleDateString('es-MX', options));
-        }
-
-        // Lista de clientes (nombre + id) generada por Blade
-        var clientes = [
-            @foreach ($clients as $client)
-                {
-                    label: "{{ $client->nombre }} - {{ $client->status == 1 ? 'Activo' : 'Inactivo' }}",
-                    value: "{{ $client->nombre }}",
-                    id: "{{ $client->id }}"
-                },
-            @endforeach
-        ];
-
-        // Autocompletar con jQuery UI
-        $("#clienteInput").autocomplete({
-            source: clientes,
-            select: function(event, ui) {
-                // Cuando el usuario selecciona una opción
-                $("#clienteInput").val(ui.item.value); // Mostrar nombre
-                $("#clienteId").val(ui.item.id); // Guardar ID oculto
-                $("#clienteNombre").val(ui.item.value.split(' - ')[
-                    0]); // Guardar solo el nombre sin estado
-                return false;
-            }
-        });
-
-        // Registrar salida desde el botón principal
-        $('#registrarSalida').click(function() {
-            const clienteId = $('#clienteId').val();
-            const clienteNombre = $('#clienteNombre').val();
-
-            if (!clienteId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Por favor seleccione un cliente válido',
-                });
-                return;
-            }
-
-            // Mostrar confirmación con SweetAlert
-            Swal.fire({
-                title: '¿Confirmar salida?',
-                html: `¿Deseas registrar la salida de <strong>${clienteNombre}</strong>?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, registrar salida',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    registrarSalida(clienteId, clienteNombre);
-                }
-            });
-        });
-
-        // Registrar salida desde los botones de la tabla
-        $(document).on('click', '.registrar-salida-btn', function() {
-        const attendanceId = $(this).data('attendance-id');
-        const clientName = $(this).data('client-name');
-
-        Swal.fire({
-            title: '¿Confirmar salida?',
-            html: `¿Deseas registrar la salida de <strong>${clientName}</strong>?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, registrar salida',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                registrarSalida(null, clientName, attendanceId);
-            }
-        });
-        });
-        });
-
-        function registrarSalida(clientId, clientName, attendanceId = null) {
-            // Enviar la solicitud AJAX
-            $.ajax({
-                url: '/registrarsalida',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    client_id: clientId,
-                    attendance_id: attendanceId
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Éxito',
-                            text: 'Salida registrada correctamente',
-                        }).then(() => {
-                            location.reload(); // Recargar la página para ver los cambios
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message || 'Error al registrar salida',
-                        });
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: xhr.responseJSON?.message || 'Error en el servidor',
-                    });
-                }
-            });
-        }
-
-        function updateCurrentDate() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            $('#current-date').text(now.toLocaleDateString('es-MX', options));
-        }
-
-        // Actualizar contadores de tiempo cada minuto
-        function updateTimeCounters() {
-            $('.time-counter').each(function() {
-                const registerTime = new Date($(this).data('time'));
-                const now = new Date();
-                const diffMs = now - registerTime;
-                const diffMins = Math.round(diffMs / 60000);
-
-                $(this).text(diffMins + ' minutos');
-
-                // Actualizar el estado del semáforo
-                const row = $(this).closest('tr');
-                const statusBadge = row.find('.badge');
-
-                statusBadge.removeClass('bg-success bg-warning bg-danger');
-
-                if (diffMins < 105) {
-                    statusBadge.addClass('bg-success').text('Activo');
-                } else if (diffMins >= 105 && diffMins < 115) {
-                    statusBadge.addClass('bg-warning').text('Por expirar');
-                } else {
-                    statusBadge.addClass('bg-danger').text('Expirado');
-                }
-            });
-        }
-
-        $('#registrarAsistencia').click(function() {
-            const clienteId = $('#clienteId').val();
-            const clienteNombre = $('#clienteNombre').val();
-
-            if (!clienteId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Por favor seleccione un cliente válido',
-                });
-                return;
-            }
-
-            // Mostrar confirmación con SweetAlert
-            Swal.fire({
-                title: '¿Confirmar registro?',
-                html: `¿Deseas registrar la asistencia de <strong>${clienteNombre}</strong>?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, registrar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Enviar la solicitud AJAX si se confirma
-                    $.ajax({
-                        url: '/registrarasistencia',
-                        method: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            client_id: clienteId
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Éxito',
-                                    text: 'Asistencia registrada correctamente',
-                                }).then(() => {
-                                    location
-                                        .reload(); // Recargar la página para ver los cambios
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: response.message ||
-                                        'Error al registrar asistencia',
-                                });
-                            }
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: xhr.responseJSON?.message ||
-                                    'Error en el servidor',
-                            });
-                        }
-                    });
-                }
-            });
+                $('#current-date').text(new Date().toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }));
+            }, 60000);
         });
     </script>
 @stop

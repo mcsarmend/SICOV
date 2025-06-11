@@ -173,15 +173,13 @@ class clientesController extends Controller
         ]);
     }
 
-
-
-
     public function registrarasistencia(Request $request)
     {
         try {
 
             $type = $this->gettype();
             $type = intval($type);
+
             if ($type != 3 || $type != 4) {
                 return response()->json([
                     'success' => false,
@@ -299,14 +297,6 @@ class clientesController extends Controller
     public function registrarsalida(Request $request)
     {
         try {
-            $type = $this->gettype();
-            $type = intval($type);
-            if ($type != 3 || $type != 4) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para registrar asistencias'
-                ], 403);
-            }
 
 
             // Configurar timezone para México

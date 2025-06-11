@@ -66,7 +66,7 @@
 
             // Realizar la solicitud AJAX con jQuery
             $.ajax({
-                url: '/eliminarproducto', // Ruta al controlador de Laravel
+                url: '/bajaproducto', // Ruta al controlador de Laravel
                 type: 'POST',
                 data: datosFormulario, // Enviar los datos del formulario
                 headers: {

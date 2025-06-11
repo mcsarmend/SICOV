@@ -52,6 +52,12 @@ Route::post('cancelarremision', [ventasController::class, 'cancelarremision'])->
 
 //CLIENTES
 Route::get('clientes', [clientesController::class, 'clientes'])->middleware(['auth']);
+
+
+Route::get('clientes', [ClientesController::class, 'clientes'])
+    ->middleware(['auth'])
+    ->name('clientes.index'); // Aquí asignamos el nombre a la ruta
+
 Route::get('asistencias', [clientesController::class, 'asistencias'])->middleware(['auth']);
 Route::get('preregistro', [clientesController::class, 'preregistro'])->middleware(['auth']);
 Route::get('altacliente', [clientesController::class, 'altacliente'])->middleware(['auth']);
@@ -104,10 +110,18 @@ Route::get('bajainventario', [inventarioController::class, 'bajainventario'])->m
 Route::get('edicioninventario', [inventarioController::class, 'edicioninventario'])->middleware(['auth']);
 Route::get('ingresoinventario', [inventarioController::class, 'ingresoinventario'])->middleware(['auth']);
 Route::get('salidainventario', [inventarioController::class, 'salidainventario'])->middleware(['auth']);
+Route::get('detalleamacenes', [inventarioController::class, 'detalleamacenes']);
+Route::get('detalleprecios', [inventarioController::class, 'detalleprecios'])->middleware(['auth']);
 
+
+Route::post('altaproducto', [inventarioController::class, 'altaproducto'])->middleware(['auth']);
+Route::post('bajaproducto', [inventarioController::class, 'bajaproducto'])->middleware(['auth']);
+
+// USUARIOS
 
 Route::get('usuarios', [usersController::class, 'usuarios']);
 Route::get('listausuarios', [usersController::class, 'listausuarios']);
+
 Route::post('crearusuario', [usersController::class, 'crearusuario']);
 Route::post('actualizarusuario', [usersController::class, 'actualizarusuario']);
 Route::post('actualizarext', [usersController::class, 'actualizarext']);

@@ -21,9 +21,6 @@
                             <tr>
                                 <th>Codigo</th>
                                 <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Categoria</th>
-
                                 <th>Almacenes</th>
                                 <th>Precios</th>
                             </tr>
@@ -172,13 +169,6 @@
                 {
                     "data": "nombre"
                 },
-                {
-                    "data": "marca"
-                },
-                {
-                    "data": "categoria"
-                },
-
                 {
                     "data": "almacenes",
                     "render": function(data, type, row) {

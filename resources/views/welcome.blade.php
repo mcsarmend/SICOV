@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Integral Compra-Venta</title>
+    <title>Sistema Integral de Gestión de Asistencias y Comercio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome (íconos) -->
@@ -37,7 +37,7 @@
                 <img src="assets/images/logo.png" alt="Logo" style="height: 40px;">
                 <!-- Opcional: <span class="ms-2">Sistema Integral</span> -->
             </a>
-            <a class="navbar-brand" href="#">Sistema Integral Compra-Venta</a>
+            <a class="navbar-brand" href="#">Sistema Integral de Gestión de Asistencias y Comercio</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>

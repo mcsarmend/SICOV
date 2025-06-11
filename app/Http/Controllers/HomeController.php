@@ -28,18 +28,24 @@ class HomeController extends Controller
     {
 
         $type = Auth::user()->role;
-        $clients = clients::all();
-        $attendances = Attendance::select([
-            'attendance.check_in',
-            'attendance.check_out',
-            'attendance.package_type',
-            'attendance.classes_remaining',
-            'clients.nombre'
-        ])
-            ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
-            ->get();
+        $totalClientes = clients::count();
+        $asistenciasHoy = attendance::whereDate('check_in', today())->count();
+        $asistenciasManana = attendance::whereBetween('check_in', [today()->startOfDay(), today()->setTime(12, 0, 0)])->count();
+        $asistenciasTarde = attendance::whereBetween('check_in', [today()->setTime(12, 0, 1), today()->endOfDay()])->count();
+        $asistenciasSemana = attendance::whereBetween('check_in', [now()->startOfWeek(), now()->endOfWeek()])->count();
+        $clientesActivos = clients::where('status', 1)->count();
+        $metaClientes = 350;
 
-        return view('home', ['type' => $type, 'clients' => $clients, 'attendances' => $attendances]);
+        return view('home', [
+            'type' => $type,
+            'totalClientes' => $totalClientes,
+            'metaClientes' => $metaClientes,
+            'asistenciasHoy' => $asistenciasHoy,
+            'asistenciasManana' => $asistenciasManana,
+            'asistenciasTarde' => $asistenciasTarde,
+            'asistenciasSemana' => $asistenciasSemana,
+            'clientesActivos' => $clientesActivos
+        ]);
     }
 
 

@@ -21,7 +21,7 @@
                             <div class="col">
                                 <select name="sucursal" id="sucursal" class="form-control" disabled>
                                     @foreach ($sucursales as $sucursal)
-                                        <option value="{{ $sucursal->id }}">{{ $sucursal->nombre }}</option>
+                                        <option value="{{ $sucursal->id }}">{{ $sucursal->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

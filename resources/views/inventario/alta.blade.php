@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-header">
             <h1>Alta Inventario</h1>
-            <h4>Sección donde se dan de alta productos de manera unitaria</h4>
+
         </div>
         <div class="card-body">
             <form id="altaproducto">
@@ -24,31 +24,18 @@
                     </div>
 
                     <div class="col">
-                        <label for="name">Codigo de Barras:</label>
-                        <input type="text" name="codigo" required minlength="12" maxlength="12" class="form-control"
+                        <label for="name">Precio:</label>
+                        <input type="text" name="precio" required minlength="1" maxlength="10" class="form-control"
                             placeholder="">
                         <br>
-
                     </div>
-
-
                 </div>
-
-
-
-
                 <h3>Existencias</h3>
                 <div class="row">
                     <div class="col">
                         <label for="name">Cantidad:</label>
                         <input type="text" name="existencia" required minlength="1" maxlength="3000"
                             class="form-control" placeholder="">
-                        <br>
-                    </div>
-                    <div class="col">
-                        <label for="costo">Costo:</label>
-                        <input type="text" name="costo" required minlength="1" maxlength="10"
-                            id="costo"class="form-control" placeholder="">
                         <br>
                     </div>
                 </div>
