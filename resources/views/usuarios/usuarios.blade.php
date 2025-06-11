@@ -43,8 +43,9 @@
                         <div class="col-md-8">
                             <select id="tipo" name="tipo" class="form-control" required>
                                 <option value="1">Administrador</option>
-                                <option value="2">Facturas</option>
-                                <option value="3">Instructor</option>
+                                <option value="2">Vendedor / Facturas</option>
+                                <option value="3">Instructor Gimnasio</option>
+                                <option value="3">Instructor Alberca</option>
                             </select>
                         </div>
                     </div>

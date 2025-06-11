@@ -110,11 +110,11 @@
                                         <div class="form-group">
                                             <label for="soloAlbercaSelect">Paquete Solo Alberca</label>
                                             <select class="form-control" id="soloAlbercaSelect" name="paquete_alberca">
-                                                <option value="4_clases_638">4 clases ($638)</option>
-                                                <option value="8_clases_951">8 clases ($951)</option>
-                                                <option value="12_clases_1270">12 clases ($1,270)</option>
-                                                <option value="16_clases_1501">16 clases ($1,501)</option>
-                                                <option value="20_clases_638">20 clases ($638)</option>
+                                                <option value="1_clases_638">4 clases ($638)</option>
+                                                <option value="2_clases_951">8 clases ($951)</option>
+                                                <option value="3_clases_1270">12 clases ($1,270)</option>
+                                                <option value="4_clases_1501">16 clases ($1,501)</option>
+                                                <option value="5_clases_1749">20 clases ($638)</option>
                                             </select>
                                         </div>
                                     </div>

@@ -75,7 +75,7 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="pkg4" value="4_clases_638"
+                                            <input type="radio" name="paquete_alberca" id="pkg4" value="1_clases_638"
                                                 class="form-check-input">
                                             <label for="pkg4" class="form-check-label">4 clases ($638)</label>
                                         </div>
@@ -84,7 +84,7 @@
                                 <div class="col-md-4">
                                     <div class="card package-option">
                                         <div class="card-body">
-                                            <input type="radio" name="paquete_alberca" id="pkg8" value="8_clases_951"
+                                            <input type="radio" name="paquete_alberca" id="pkg8" value="2_clases_951"
                                                 class="form-check-input">
                                             <label for="pkg8" class="form-check-label">8 clases ($951)</label>
                                         </div>
@@ -94,7 +94,7 @@
                                     <div class="card package-option">
                                         <div class="card-body">
                                             <input type="radio" name="paquete_alberca" id="pkg12"
-                                                value="12_clases_1270" class="form-check-input">
+                                                value="3_clases_1270" class="form-check-input">
                                             <label for="pkg12" class="form-check-label">12 clases ($1,270)</label>
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@
                                     <div class="card package-option">
                                         <div class="card-body">
                                             <input type="radio" name="paquete_alberca" id="pkg16"
-                                                value="16_clases_1501" class="form-check-input">
+                                                value="4_clases_1501" class="form-check-input">
                                             <label for="pkg16" class="form-check-label">16 clases ($1,501)</label>
                                         </div>
                                     </div>
@@ -112,7 +112,7 @@
                                     <div class="card package-option">
                                         <div class="card-body">
                                             <input type="radio" name="paquete_alberca" id="pkg20"
-                                                value="20_clases_638" class="form-check-input">
+                                                value="5_clases_1749" class="form-check-input">
                                             <label for="pkg20" class="form-check-label">20 clases ($638)</label>
                                         </div>
                                     </div>

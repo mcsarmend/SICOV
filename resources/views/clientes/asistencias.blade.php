@@ -17,6 +17,7 @@
                 <h2 id="current-date" style="font-size: 2rem; font-weight: bold;"></h2>
             </div>
 
+
             <div class="row align-items-end">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -38,7 +39,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="invisible">.</label>
-                        <button class="btn btn-danger btn-block" id="registrarSalida">Registrar Salida</button>
+                        <button class="btn btn-secondary btn-block" id="actualizarTabla">Actualizar Tabla</button>
                     </div>
                 </div>
             </div>
@@ -46,8 +47,9 @@
             <br><br><br>
 
             <!-- Tabla de asistencias -->
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped" id = "atendanceTable">
+
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <table class="table table-bordered table-striped table-sm" id = "atendanceTable">
                     <thead class="thead-dark">
                         <tr>
                             <th>Nombre</th>
@@ -55,6 +57,7 @@
                             <th>Hora de Registro</th>
                             <th>Clases Restantes</th>
                             <th>Tiempo Transcurrido</th>
+                            <th>Salida</th>
 
                         </tr>
                     </thead>
@@ -116,6 +119,35 @@
         #attendanceTable tbody tr:hover {
             background-color: rgba(0, 0, 0, 0.05) !important;
         }
+
+        /* Estilos para hacer la tabla más compacta */
+        #atendanceTable {
+            font-size: 1rem;
+            /* Reduce el tamaño de fuente */
+        }
+
+        #atendanceTable th,
+        #atendanceTable td {
+            padding: 0.5rem;
+            /* Reduce el padding de las celdas */
+        }
+
+        #atendanceTable thead th {
+            font-size: 0.9rem;
+            /* Tamaño de fuente para encabezados */
+        }
+
+        /* Ajusta el tamaño de los botones */
+        .registrar-salida-btn {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        /* Reduce el tamaño de los badges */
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.3em 0.6em;
+        }
     </style>
 @stop
 
@@ -125,118 +157,172 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/datatables.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/datatables.min.js">
+    </script>
+
+
     <script>
         $(document).ready(function() {
             // Mostrar fecha actual
             drawTriangles();
 
-            updateCurrentDate();
+            var attendance = @json($attendances);
 
-            // Configuración del DataTable
-            var table = $('#attendanceTable').DataTable({
+
+            $('#atendanceTable').DataTable({
+                data: attendance,
+                "language": {
+                    "url": "{{ asset('js/datatables/lang/Spanish.json') }}"
+                },
+
+                destroy: true,
                 processing: true,
-                serverSide: false,
+                sort: true,
+                paging: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: 50,
+                dom: '<"top"f>rt<"bottom"lip><"clear">', // Diseño más compacto
                 responsive: true,
-                data: @json($attendances),
                 columns: [{
-                        data: 'client.nombre',
-                        name: 'client.nombre',
-                        title: 'Nombre'
+                        data: 'nombre',
+                        title: 'Nombre',
+                        width: '10%'
                     },
                     {
-                        data: 'client.id',
-                        name: 'client.id',
-                        title: 'Número de Cliente'
+                        data: null,
+                        render: (data) => `#${data.id || 'N/A'}`,
+                        title: 'Número de Cliente',
+                        width: '10%'
                     },
                     {
                         data: 'check_in',
-                        name: 'check_in',
-                        title: 'Hora de Registro',
                         render: function(data) {
-                            return new Date(data).toLocaleTimeString('es-MX');
-                        }
+                            const date = new Date(data);
+                            return date.toLocaleTimeString();
+                        },
+                        title: 'Hora de Registro',
+                        width: '10%'
                     },
                     {
                         data: 'classes_remaining',
-                        name: 'classes_remaining',
-                        title: 'Clases Restantes'
+                        title: 'Clases Restantes',
+                        width: '10%'
                     },
                     {
                         data: 'check_in',
-                        name: 'tiempo_transcurrido',
-                        title: 'Tiempo Transcurrido',
                         render: function(data, type, row) {
-                            return calculateElapsedTime(data);
-                        }
+                            return formatTimeElapsed(data, row.check_out);
+                        },
+                        title: 'Tiempo Transcurrido',
+                        width: '10%'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            if (!row.check_out) {
+                                return `<button class="btn btn-sm btn-warning registrar-salida-btn registrar-salida-btn"
+                    data-attendance-id="${row.id}"
+                    data-client-name="${row.nombre}">
+                    Registrar Salida</button>`;
+                            } else {
+                                return `<span class="badge badge-success">Salida: ${new Date(row.check_out).toLocaleTimeString()}</span>`;
+                            }
+                        },
+                        title: 'Salida',
+                        width: '10%'
                     }
                 ],
                 createdRow: function(row, data, dataIndex) {
-                    // Aplicar clases según el tiempo transcurrido
-                    var checkInTime = new Date(data.check_in);
-                    var now = new Date();
-                    var diffMs = now - checkInTime;
-                    var diffMins = Math.round(diffMs / 60000);
 
-                    if (diffMins < 45) { // Menos de 45 minutos (verde)
-                        $(row).addClass('bg-success-light');
-                    } else if (diffMins >= 45 && diffMins < 55) { // 45-55 minutos (amarillo)
-                        $(row).addClass('bg-warning-light');
-                    } else { // 55+ minutos (rojo)
-                        $(row).addClass('bg-danger-light');
+                    var tipo = parseInt(@json($tipo));
+
+                    if (data.check_out) return; // No aplicar estilos si ya tiene salida
+
+                    const checkIn = new Date(data.check_in);
+                    const now = new Date();
+                    diffMinutes = Math.floor((now - checkIn) / 1000 / 60);
+
+
+
+
+                    switch (tipo) {
+                        // Gimnasio
+                        case 3:
+                            // 2 horas
+                            if (diffMinutes < 105) {
+                                $(row).addClass('bg-success-light');
+                            } else if (diffMinutes >= 105 && diffMinutes < 115) {
+                                $(row).addClass('bg-warning-light');
+                            } else {
+                                $(row).addClass('bg-danger-light');
+                            }
+                            break;
+                        // alberca
+                        case 4:
+                            // 1 hora
+                            if (diffMinutes < 45) {
+                                $(row).addClass('bg-success-light');
+                            } else if (diffMinutes >= 45 && diffMinutes < 55) {
+                                $(row).addClass('bg-warning-light');
+                            } else {
+                                $(row).addClass('bg-danger-light');
+                            }
+                            break;
+                        default:
+
+                            break;
                     }
-                },
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+
+
+
                 }
             });
 
-            // Función para calcular el tiempo transcurrido
-            function calculateElapsedTime(checkInTime) {
-                var now = new Date();
-                var checkIn = new Date(checkInTime);
-                var diffMs = now - checkIn;
-                var diffMins = Math.round(diffMs / 60000);
 
-                return diffMins + ' minutos';
-            }
-
-            // Actualizar el tiempo cada minuto
-            setInterval(function() {
-                table.rows().every(function() {
-                    var data = this.data();
-                    var checkInTime = new Date(data.check_in);
-                    var now = new Date();
-                    var diffMs = now - checkInTime;
-                    var diffMins = Math.round(diffMs / 60000);
-
-                    // Actualizar el texto del tiempo
-                    $(this.node()).find('td:eq(4)').text(diffMins + ' minutos');
-
-                    // Actualizar las clases según el tiempo
-                    $(this.node()).removeClass('bg-success-light bg-warning-light bg-danger-light');
-
-                    if (diffMins < 45) {
-                        $(this.node()).addClass('bg-success-light');
-                    } else if (diffMins >= 45 && diffMins < 55) {
-                        $(this.node()).addClass('bg-warning-light');
-                    } else {
-                        $(this.node()).addClass('bg-danger-light');
+            function actualizarTabla() {
+                $.ajax({
+                    url: '/actualizarasistencias', // Ruta donde devuelves los datos (AJAX JSON)
+                    method: 'GET',
+                    success: function(response) {
+                        const table = $('#atendanceTable').DataTable();
+                        table.clear().rows.add(response).draw();
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo actualizar la tabla'
+                        });
                     }
                 });
-            }, 60000); // Actualizar cada minuto
+            }
 
-            // Resto de tu código existente...
+            $('#actualizarTabla').on('click', function() {
+                actualizarTabla();
+            });
+
+
         });
 
-        function updateCurrentDate() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            $('#current-date').text(now.toLocaleDateString('es-MX', options));
+        function formatTimeElapsed(checkIn, checkOut = null) {
+            const checkInDate = new Date(checkIn);
+            const endDate = checkOut ? new Date(checkOut) : new Date();
+            const diffMs = endDate - checkInDate;
+
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+            return `${diffHours}h ${diffMinutes}m`;
         }
 
         // Lista de clientes (nombre + id) generada por Blade
@@ -263,24 +349,16 @@
             }
         });
 
-        // Registrar salida desde el botón principal
-        $('#registrarSalida').click(function() {
-            const clienteId = $('#clienteId').val();
-            const clienteNombre = $('#clienteNombre').val();
 
-            if (!clienteId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Por favor seleccione un cliente válido',
-                });
-                return;
-            }
 
-            // Mostrar confirmación con SweetAlert
+        // Registrar salida desde los botones de la tabla
+        $(document).on('click', '.registrar-salida-btn', function() {
+            client_id = $(this).data('attendance-id');
+            const clientName = $(this).data('client-name');
+
             Swal.fire({
                 title: '¿Confirmar salida?',
-                html: `¿Deseas registrar la salida de <strong>${clienteNombre}</strong>?`,
+                html: `¿Deseas registrar la salida de <strong>${clientName}</strong>?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -289,42 +367,20 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    registrarSalida(clienteId, clienteNombre);
+                    registrarSalida(client_id);
                 }
             });
         });
 
-        // Registrar salida desde los botones de la tabla
-        $(document).on('click', '.registrar-salida-btn', function() {
-        const attendanceId = $(this).data('attendance-id');
-        const clientName = $(this).data('client-name');
 
-        Swal.fire({
-            title: '¿Confirmar salida?',
-            html: `¿Deseas registrar la salida de <strong>${clientName}</strong>?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, registrar salida',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                registrarSalida(null, clientName, attendanceId);
-            }
-        });
-        });
-        });
-
-        function registrarSalida(clientId, clientName, attendanceId = null) {
+        function registrarSalida(client_id) {
             // Enviar la solicitud AJAX
             $.ajax({
                 url: '/registrarsalida',
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    client_id: clientId,
-                    attendance_id: attendanceId
+                    client_id: client_id,
                 },
                 success: function(response) {
                     if (response.success) {
@@ -353,42 +409,7 @@
             });
         }
 
-        function updateCurrentDate() {
-            const now = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            $('#current-date').text(now.toLocaleDateString('es-MX', options));
-        }
 
-        // Actualizar contadores de tiempo cada minuto
-        function updateTimeCounters() {
-            $('.time-counter').each(function() {
-                const registerTime = new Date($(this).data('time'));
-                const now = new Date();
-                const diffMs = now - registerTime;
-                const diffMins = Math.round(diffMs / 60000);
-
-                $(this).text(diffMins + ' minutos');
-
-                // Actualizar el estado del semáforo
-                const row = $(this).closest('tr');
-                const statusBadge = row.find('.badge');
-
-                statusBadge.removeClass('bg-success bg-warning bg-danger');
-
-                if (diffMins < 105) {
-                    statusBadge.addClass('bg-success').text('Activo');
-                } else if (diffMins >= 105 && diffMins < 115) {
-                    statusBadge.addClass('bg-warning').text('Por expirar');
-                } else {
-                    statusBadge.addClass('bg-danger').text('Expirado');
-                }
-            });
-        }
 
         $('#registrarAsistencia').click(function() {
             const clienteId = $('#clienteId').val();

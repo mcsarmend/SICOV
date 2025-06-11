@@ -20,6 +20,7 @@ class attendance extends Model
         'check_out',
         'package_type',
         'classes_remaining',
+        'type'
     ];
 
     protected $guarded = [];

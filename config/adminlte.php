@@ -429,6 +429,11 @@ return [
             'url' => '#',
             'submenu' => [
                 [
+                    'text' => 'Asistencias',
+                    'url' => 'asistencias',
+                    'icon' => 'fas fa-user-check'
+                ],
+                [
                     'text' => 'Preregistro',
                     'url' => 'preregistro',
                     'icon' => 'fas fa-plus-square',

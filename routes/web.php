@@ -52,12 +52,18 @@ Route::post('cancelarremision', [ventasController::class, 'cancelarremision'])->
 
 //CLIENTES
 Route::get('clientes', [clientesController::class, 'clientes'])->middleware(['auth']);
+Route::get('asistencias', [clientesController::class, 'asistencias'])->middleware(['auth']);
 Route::get('preregistro', [clientesController::class, 'preregistro'])->middleware(['auth']);
 Route::get('altacliente', [clientesController::class, 'altacliente'])->middleware(['auth']);
 Route::get('bajacliente', [clientesController::class, 'bajacliente'])->middleware(['auth']);
 Route::get('edicioncliente', [clientesController::class, 'edicioncliente'])->middleware(['auth']);
 Route::get('verdireccioncliente', [clientesController::class, 'verdireccioncliente'])->middleware(['auth']);
+Route::get('actualizarasistencias', [clientesController::class, 'actualizarasistencias'])->middleware(['auth']);
 
+
+
+Route::post('registrarsalida', [clientesController::class, 'registrarsalida'])->middleware(['auth']);
+Route::post('registrarasistencia', [clientesController::class, 'registrarasistencia'])->middleware(['auth']);
 Route::post('infopreregistro', [clientesController::class, 'infopreregistro'])->middleware(['auth']);
 Route::post('precrearcliente', [clientesController::class, 'precrearcliente'])->middleware(['auth']);
 Route::post('crearcliente', [clientesController::class, 'crearcliente'])->middleware(['auth']);
@@ -110,3 +116,6 @@ Route::post('eliminarusuario', [usersController::class, 'eliminarusuario']);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+

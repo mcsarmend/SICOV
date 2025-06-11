@@ -16,6 +16,16 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+
+
+// Tipos de usuarios
+
+// 1 -> Super Administrador
+// 2 -> Vendedor
+// 3 -> Instructor Gimnasio
+// 4 -> Instructor Alberca
+
     protected $fillable = [
         'name',
         'email',
