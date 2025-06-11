@@ -28,7 +28,6 @@
                                 <th>Observaciones</th>
                                 <th>Paquete Alberca</th>
                                 <th>Horario Alberca</th>
-                                <th>Tipo</th>
                                 <th>Fecha de Creacion</th>
                                 <th>Estado</th>
                                 <th>Historial de pagos</th>
@@ -113,9 +112,7 @@
                     {
                         "data": "horario_alberca"
                     },
-                    {
-                        "data": "tipo"
-                    },
+
                     {
                         "data": "fecha_creacion"
                     },

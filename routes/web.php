@@ -59,6 +59,7 @@ Route::get('bajacliente', [clientesController::class, 'bajacliente'])->middlewar
 Route::get('edicioncliente', [clientesController::class, 'edicioncliente'])->middleware(['auth']);
 Route::get('verdireccioncliente', [clientesController::class, 'verdireccioncliente'])->middleware(['auth']);
 Route::get('actualizarasistencias', [clientesController::class, 'actualizarasistencias'])->middleware(['auth']);
+Route::get('consultarpagos', [clientesController::class, 'consultarpagos'])->middleware(['auth']);
 
 
 

@@ -45,7 +45,7 @@
                                 <option value="1">Administrador</option>
                                 <option value="2">Vendedor / Facturas</option>
                                 <option value="3">Instructor Gimnasio</option>
-                                <option value="3">Instructor Alberca</option>
+                                <option value="4">Instructor Alberca</option>
                             </select>
                         </div>
                     </div>
@@ -137,9 +137,10 @@
                         </div>
                         <div class="col">
                             <select id="tipo_actualizar" name="tipo" class="form-control" required>
-                                <option value="1">Super Administrador</option>
-                                <option value="2">Administrador</option>
-                                <option value="3">Ejecutivo</option>
+                                <option value="1">Administrador</option>
+                                <option value="2">Vendedor / Facturas</option>
+                                <option value="3">Instructor Gimnasio</option>
+                                <option value="4">Instructor Alberca</option>
                             </select><br><br>
                         </div>
                     </div>

@@ -37,7 +37,7 @@ class usersController extends Controller
             'users.name as nombre',
             'users.email as correo',
             'users.pass as contrasena',
-            'users.phone as telefono',
+            'users.fecha_creacion  telefono',
             'users.role as rol',
             'warehouse.nombre as sucursal',
             DB::raw('CASE WHEN users.status = 1 THEN "Activo" ELSE "Inactivo" END as estatus')
@@ -69,9 +69,7 @@ class usersController extends Controller
             $usuario->role         = $request->tipo;
             $usuario->email        = $request->email;
             $usuario->phone        = $request->telefono;
-            $usuario->warehouse    = $request->sucursal;
-            $usuario->hora_entrada = $request->hora_entrada;
-            $usuario->hora_salida  = $request->hora_salida;
+
             $usuario->status       = 1;
 
             // Guardar el usuario en la base de datos

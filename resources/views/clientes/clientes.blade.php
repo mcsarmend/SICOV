@@ -26,7 +26,6 @@
                                 <th>Observaciones</th>
                                 <th>Paquete Alberca</th>
                                 <th>Horario Alberca</th>
-                                <th>Tipo</th>
                                 <th>Fecha de Creacion</th>
                                 <th>Estado</th>
                                 <th>Historial de pagos</th>
@@ -58,9 +57,14 @@
                     <table id="historialpagostabla" class="table">
                         <thead>
                             <tr>
+                                <th># de pago</th>
                                 <th>Fecha</th>
-                                <th>Cantidad</th>
-                                <th>Tipo de pago</th>
+                                <th>Monto</th>
+                                <th>Concepto</th>
+                                <th>Estado</th>
+                                <th>Mes correspondiente</th>
+                                <th>Metodo de Pago</th>
+                                <th>Observaciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,9 +163,6 @@
                         "data": "horario_alberca"
                     },
                     {
-                        "data": "tipo"
-                    },
-                    {
                         "data": "fecha_creacion"
                     },
                     {
@@ -185,7 +186,7 @@
         function ver(id) {
             $('#historialpagos').modal('show');
             $.ajax({
-                url: 'historialpagos', // URL a la que se hace la solicitud
+                url: 'consultarpagos', // URL a la que se hace la solicitud
                 type: 'GET', // Tipo de solicitud (GET, POST, etc.)
                 data: {
                     id: id
@@ -229,14 +230,30 @@
                             }
                         },
                         "data": data.productos,
-                        "columns": [{
-                                "data": "fecha"
+                        "columns": [
+                            {
+                                "data": "id"
                             },
                             {
-                                "data": "cantidad"
+                                "data": "fecha_pago"
                             },
                             {
-                                "data": "tipo"
+                                "data": "monto"
+                            },
+                            {
+                                "data": "concepto"
+                            },
+                            {
+                                "data": "estatus"
+                            },
+                            {
+                                "data": "mes_correspondiente"
+                            },
+                            {
+                                "data": "metodo_pago"
+                            },
+                            {
+                                "data": "observaciones"
                             },
                         ]
                     });

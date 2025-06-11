@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\address;
 use App\Models\attendance;
 use App\Models\clients;
+use App\Models\payments;
 use App\Models\preregistration;
 use App\Models\warehouse;
 use Illuminate\Http\Request;
@@ -51,7 +52,28 @@ class clientesController extends Controller
     }
     public function bajacliente()
     {
-        $clients = clients::all();
+        $clients = clients::select(
+            'clients.id',
+            'clients.nombre',
+            'clients.telefono',
+            'clients.gimnasio',
+            'clients.alberca',
+            'clients.observaciones',
+            'clients.tipo',
+            'clients.fecha_creacion',
+            'clients.status',
+            DB::raw('COALESCE(clients.paquete_alberca, "Sin paquete") as paquete_alberca'),
+            DB::raw('COALESCE(clients.horario_alberca, "Sin horario") as horario_alberca'),
+        )
+            ->orderBy('clients.id', 'desc')
+            ->get()
+            ->map(function ($item) {
+                // Transformar booleanos a texto
+                $item->gimnasio = $item->gimnasio ? 'Sí' : 'No';
+                $item->alberca = $item->alberca ? 'Sí' : 'No';
+                $item->status = $item->status ? 'Activo' : 'Inactivo';
+                return $item;
+            });
         $type = $this->gettype();
         return view('clientes.baja', ['type' => $type, 'clients' => $clients]);
     }
@@ -63,7 +85,7 @@ class clientesController extends Controller
 
 
 
-        $tipo = intval( Auth::user()->role);
+        $tipo = intval(Auth::user()->role);
 
 
         if ($tipo == 3 || $tipo == 4) {
@@ -135,9 +157,37 @@ class clientesController extends Controller
     }
 
 
+    public function consultarpagos(Request $request)
+    {
+        $id = $request->input('id');
+
+        // Obtener los pagos del cliente con el ID proporcionado
+        $pagos = payments::where('idcliente', $id)
+            ->select(['fecha_pago', 'monto', 'concepto', 'metodo_pago', 'id','observaciones','estatus','mes_correspondiente'])
+            ->orderBy('fecha_pago', 'desc')
+            ->get();
+
+        // Preparar la respuesta en formato JSON
+        return response()->json([
+            'productos' => $pagos
+        ]);
+    }
+
+
+
+
     public function registrarasistencia(Request $request)
     {
         try {
+
+            $type = $this->gettype();
+            $type = intval($type);
+            if ($type != 3 || $type != 4) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes permiso para registrar asistencias'
+                ], 403);
+            }
             // Configurar timezone para México
             date_default_timezone_set('America/Mexico_City');
 
@@ -160,44 +210,67 @@ class clientesController extends Controller
                 ]);
             }
 
-            // 2. Extraer límites del paquete
-            $packageParts = explode('_', $client->paquete_alberca);
-            $maxClassesPerWeek = (int) $packageParts[0];
-            $maxClassesPerMonth = $maxClassesPerWeek * 4;
+            $alberca = $client->alberca;
 
-            // 3. Contar asistencias SEMANALES (usando hora de México)
-            $startOfWeek = $nowMexico->copy()->startOfWeek();
-            $endOfWeek = $nowMexico->copy()->endOfWeek();
+            if ($alberca) {
 
-            $weeklyCount = Attendance::where('client_id', $client->id)
-                ->whereBetween('check_in', [$startOfWeek, $endOfWeek])
-                ->count();
+                // 2. Extraer límites del paquete
+                $packageParts = explode('_', $client->paquete_alberca);
+                $maxClassesPerWeek = (int) $packageParts[0];
+                $maxClassesPerMonth = $maxClassesPerWeek * 4;
 
-            // 4. Contar asistencias MENSUALES (usando hora de México)
-            $startOfMonth = $nowMexico->copy()->startOfMonth();
-            $endOfMonth = $nowMexico->copy()->endOfMonth();
+                // 3. Contar asistencias SEMANALES (usando hora de México)
+                $startOfWeek = $nowMexico->copy()->startOfWeek();
+                $endOfWeek = $nowMexico->copy()->endOfWeek();
 
-            $monthlyCount = Attendance::where('client_id', $client->id)
-                ->whereBetween('check_in', [$startOfMonth, $endOfMonth])
-                ->count();
+                $weeklyCount = Attendance::where('client_id', $client->id)
+                    ->whereBetween('check_in', [$startOfWeek, $endOfWeek])
+                    ->count();
 
-            // 5. Validar límites
-            if ($weeklyCount >= $maxClassesPerWeek) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Límite semanal alcanzado: ' . $weeklyCount . '/' . $maxClassesPerWeek,
-                    'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth
-                ]);
+                // 4. Contar asistencias MENSUALES (usando hora de México)
+                $startOfMonth = $nowMexico->copy()->startOfMonth();
+                $endOfMonth = $nowMexico->copy()->endOfMonth();
+
+                $monthlyCount = Attendance::where('client_id', $client->id)
+                    ->whereBetween('check_in', [$startOfMonth, $endOfMonth])
+                    ->count();
+                // 5. Validar límites
+                if ($weeklyCount >= $maxClassesPerWeek) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Límite semanal alcanzado: ' . $weeklyCount . '/' . $maxClassesPerWeek,
+                        'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth
+                    ]);
+                }
+
+                $message_monthly = $monthlyCount + 1 . '/' . $maxClassesPerMonth;
+                if ($monthlyCount >= $maxClassesPerMonth) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Límite mensual alcanzado: ' . $monthlyCount . '/' . $maxClassesPerMonth,
+                        'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth
+                    ]);
+                }
+
+            } else {
+                $maxClassesPerMonth = 24;
+                $startOfMonth = $nowMexico->copy()->startOfMonth();
+                $endOfMonth = $nowMexico->copy()->endOfMonth();
+
+                $monthlyCount = Attendance::where('client_id', $client->id)
+                    ->whereBetween('check_in', [$startOfMonth, $endOfMonth])
+                    ->count();
+                $message_monthly = $monthlyCount + 1 . '/' . $maxClassesPerMonth;
+                if ($monthlyCount >= $maxClassesPerMonth) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Límite mensual alcanzado: ' . $monthlyCount . '/' . $maxClassesPerMonth,
+                        'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth
+                    ]);
+                }
             }
 
-            $message_monthly = $monthlyCount + 1 . '/' . $maxClassesPerMonth;
-            if ($monthlyCount >= $maxClassesPerMonth) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Límite mensual alcanzado: ' . $monthlyCount . '/' . $maxClassesPerMonth,
-                    'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth
-                ]);
-            }
+
 
             // 6. Registrar nueva asistencia con hora de México
             $attendance = new Attendance();
@@ -212,9 +285,7 @@ class clientesController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Asistencia registrada exitosamente',
-                'weekly_usage' => ($weeklyCount + 1) . '/' . $maxClassesPerWeek,
-                'monthly_usage' => ($monthlyCount + 1) . '/' . $maxClassesPerMonth,
-                'hora_registro' => $nowMexico->format('Y-m-d H:i:s') // Opcional: devolver hora de registro
+
             ]);
 
         } catch (\Exception $e) {
@@ -228,6 +299,16 @@ class clientesController extends Controller
     public function registrarsalida(Request $request)
     {
         try {
+            $type = $this->gettype();
+            $type = intval($type);
+            if ($type != 3 || $type != 4) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes permiso para registrar asistencias'
+                ], 403);
+            }
+
+
             // Configurar timezone para México
             date_default_timezone_set('America/Mexico_City');
 
@@ -395,6 +476,7 @@ class clientesController extends Controller
             $client->idusuario = intval($iduser);
             $client->tipo = $request->tipo_acceso;
             $client->status = 1;
+            $client->fecha_creacion = date('Y-m-d');
             $client->save();
 
             $idpreregistro = $request->preregistro_id;
@@ -413,10 +495,7 @@ class clientesController extends Controller
     {
         try {
             // Encuentra el cliente por su ID
-            $id = $request->id;
-            $clientid = Crypt::decrypt($id);
-
-            // Actualizar solo el campo status a 0
+            $clientid = $request->id;
             $client = clients::findOrFail($clientid);
             $client->status = 0;
             $client->save();
