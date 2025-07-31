@@ -62,6 +62,7 @@
         <div class="container">
             <h1 class="display-5 fw-bold">Transforma tu negocio</h1>
             <img src="assets/images/logo.png" alt="Logo" style="height: 300px;">
+            <img src="assets/images/logo_zaragoza.jpg" alt="Logo" style="height: 300px;">
         </div>
     </section>
 

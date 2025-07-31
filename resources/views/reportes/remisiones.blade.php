@@ -42,14 +42,11 @@
                         <th>Cliente</th>
                         <th>Nota</th>
                         <th>Forma de pago</th>
-                        <th>Tipo de precio</th>
                         <th>Almacen</th>
                         <th>Vendedor</th>
                         <th>Productos</th>
                         <th>Total</th>
                         <th>Estatus</th>
-                        <th>Es Reparto</th>
-                        <th>Asignado por</th>
                         <th>Imprimir</th>
                         <th>Cancelar</th>
 
@@ -181,9 +178,6 @@
                                 "data": "forma_pago"
                             },
                             {
-                                "data": "precio"
-                            },
-                            {
                                 "data": "almacen"
                             },
                             {
@@ -201,12 +195,6 @@
                             },
                             {
                                 "data": "estatus"
-                            },
-                            {
-                                "data": "reparto"
-                            },
-                            {
-                                "data": "vendedor_reparto"
                             },
                             {
                                 "data": "imprimir",

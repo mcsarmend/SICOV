@@ -22,17 +22,17 @@ class ventasController extends Controller
 {
     public function remisionar()
     {
-        $idsucursal     = Auth::user()->warehouse;
-        $vendedor       = Auth::user()->name;
-        $idvendedor     = Auth::user()->id;
-        $nombresucursal = warehouse::select('nombre')
+        $idsucursal = 1;
+        $vendedor = Auth::user()->name;
+        $idvendedor = Auth::user()->id;
+        $nombresucursal = warehouse::select('name')
             ->where('id', '=', $idsucursal)
             ->first();
-        $idssucursales = warehouse::select('id', 'nombre')
+        $idssucursales = warehouse::select('id', 'name')
             ->get();
 
-        $clientes   = clients::all();
-        $type       = $this->gettype();
+        $clientes = clients::all();
+        $type = $this->gettype();
         $vendedores = DB::table('users')
             ->select('id', 'name')
             ->get();
@@ -45,9 +45,9 @@ class ventasController extends Controller
     }
     public function remisionarlista()
     {
-        $idsucursal     = Auth::user()->warehouse;
-        $vendedor       = Auth::user()->name;
-        $idvendedor     = Auth::user()->id;
+        $idsucursal = Auth::user()->warehouse;
+        $vendedor = Auth::user()->name;
+        $idvendedor = Auth::user()->id;
         $nombresucursal = warehouse::select('nombre')
             ->where('id', '=', $idsucursal)
             ->first();
@@ -55,8 +55,8 @@ class ventasController extends Controller
             ->get();
         $vendedores = user::all();
 
-        $clientes  = clients::all();
-        $type      = $this->gettype();
+        $clientes = clients::all();
+        $type = $this->gettype();
         $productos = Product::leftJoin('product_warehouse', 'product.id', '=', 'product_warehouse.idproducto')
             ->leftJoin('product_price', 'product.id', '=', 'product_price.idproducto') // Relación correcta
             ->where('product_warehouse.idwarehouse', $idsucursal)
@@ -64,17 +64,26 @@ class ventasController extends Controller
             ->select('product.*', 'product_price.price as precio')
             ->get();
 
-        return view('ventas.remisionarlista', ['type' => $type, 'idssucursales'        => $idssucursales, 'idsucursal' => $idsucursal,
-            'nombresucursal'                              => $nombresucursal, 'idvendedor' => $idvendedor, 'vendedor'      => $vendedor, 'clientes' => $clientes, 'productos' => $productos, 'vendedores' => $vendedores]);
+        return view('ventas.remisionarlista', [
+            'type' => $type,
+            'idssucursales' => $idssucursales,
+            'idsucursal' => $idsucursal,
+            'nombresucursal' => $nombresucursal,
+            'idvendedor' => $idvendedor,
+            'vendedor' => $vendedor,
+            'clientes' => $clientes,
+            'productos' => $productos,
+            'vendedores' => $vendedores
+        ]);
     }
     public function remisiones()
     {
 
-        $timezone   = 'America/Mexico_City';
+        $timezone = 'America/Mexico_City';
         $hoy_inicio = Carbon::today($timezone)->startOfDay()->toDateTimeString(); // '2024-12-10 00:00:00'
-        $hoy_fin    = Carbon::today($timezone)->endOfDay()->toDateTimeString();   // '2024-12-10 23:59:59'
-        $id         = Auth::user()->id;
-        $query      = 'CALL obtenerremisiones("' . $hoy_inicio . '","' . $hoy_fin . '",' . $id . ')';
+        $hoy_fin = Carbon::today($timezone)->endOfDay()->toDateTimeString();   // '2024-12-10 23:59:59'
+        $id = Auth::user()->id;
+        $query = 'CALL obtenerremisiones("' . $hoy_inicio . '","' . $hoy_fin . '",' . $id . ')';
 
         $remisiones = DB::select($query);
 
@@ -88,57 +97,19 @@ class ventasController extends Controller
         return view('ventas.reportes', ['type' => $type]);
     }
 
-    public function buscarprecio(Request $request)
-    {
-        $idproducto = $request->id_producto;
-        $cantidad   = $request->cantidad;
-        $idcliente  = $request->idcliente;
-        $idprice    = $request->id_precio;
-        $nombre     = product::where('id', '=', $idproducto)->value('nombre');
-        $idsucursal = $request->sucursal;
-
-        // Validar existencias en sucursal
-        $validarCantidad = productwarehouse::where('idproducto', '=', $idproducto)
-            ->where('idwarehouse', '=', $idsucursal)
-            ->value('existencias');
-        if ($validarCantidad == null) {
-
-            return response()->json([
-                'error' => 'No hay existencias suficientes. Cuentas con: 0',
-            ], 500);
-        } else {
-
-            if ($cantidad > $validarCantidad) {
-                return response()->json([
-                    'error' => 'No hay existencias suficientes. Cuentas con: ' . $validarCantidad,
-                ], 500);
-            } else {
-                $precio = product::where('id', '=', $idproducto)
-                    ->value('price');
-                $subtotal = intval($precio) * intval($cantidad);
-                return response()->json([
-                    'idproducto' => $idproducto,
-                    'precio'     => $precio,
-                    'subtotal'   => $subtotal,
-                    'nombre'     => $nombre,
-                    'cantidad'   => $cantidad,
-                ]);
-            }
-
-        }
-
-    }
-
     public function buscarexistencias(Request $request)
     {
 
-        $idwarehouse= $request->sucursal;
+        $idwarehouse = 1;
         $idproducto = $request->id_producto;
         $existencias = productwarehouse::where('idproducto', '=', $idproducto)
             ->where('idwarehouse', '=', $idwarehouse)
             ->value('existencias');
+        $precio = product::where('id', '=', $idproducto)
+            ->value('precio');
         return response()->json([
-            'existencias' => $existencias
+            'existencias' => $existencias,
+            'precio' => $precio
         ]);
     }
 
@@ -147,30 +118,23 @@ class ventasController extends Controller
     {
         try {
             // Crear una nueva instancia del modelo referrals
-            $remision             = new referrals();
-            $date                 = DateTime::createFromFormat('j/n/Y, H:i:s', $request->fecha);
-            $fechaMysql           = $date->format('Y-m-d H:i:s');
-            $remision->fecha      = $fechaMysql;
-            $remision->nota       = $request->nota;
+            $remision = new referrals();
+            $date = DateTime::createFromFormat('j/n/Y, H:i:s', $request->fecha);
+            $fechaMysql = $date->format('Y-m-d H:i:s');
+            $remision->fecha = $fechaMysql;
+            $remision->nota = $request->nota;
             $remision->forma_pago = $request->forma_pago;
-            $remision->vendedor   = $request->vendedor;
+            $remision->vendedor = $request->vendedor;
 
-            $remision->cliente          = $this->extraerNumeroInicial($request->cliente);
-            $almacen                    = $request->almacen;
-            $remision->almacen          = $almacen;
-            $remision->total            = $request->total;
-            $remision->estatus          = "emitida";
-            $remision->tipo_de_precio   = $request->tipo_precio;
-            $remision->vendedor_reparto = $request->vendedor_reparto;
-            if ($request->reparto == null) {
-                $remision->reparto = 0;
+            $remision->cliente = $request->cliente;
+            $id_sucursal = 1; // Asignar el ID de la sucursal, si es necesario
 
-            } else {
-                $remision->reparto          = $request->reparto;
-                $remision->vendedor_reparto = $request->vendedor_reparto;
-            }
+            $remision->almacen = $id_sucursal;
+            $remision->total = $request->total;
+            $remision->estatus = "emitida";
 
-            $productos           = json_decode($request->productos);
+
+            $productos = json_decode($request->productos);
             $remision->productos = json_encode($productos); // Convertir el array de productos a JSON
 
             foreach ($productos as $producto) {
@@ -179,14 +143,14 @@ class ventasController extends Controller
 
                 $existenciasActual = productwarehouse::select('existencias')
                     ->where('idproducto', intVal($idproducto))
-                    ->where('idwarehouse', intVal($almacen))
+                    ->where('idwarehouse', intVal($id_sucursal))
                     ->first();
 
                 $CantidadDescontar = $producto->Cantidad;
-                $nuevaexistencia   = $existenciasActual->existencias - intVal($CantidadDescontar);
+                $nuevaexistencia = $existenciasActual->existencias - intVal($CantidadDescontar);
 
                 productwarehouse::where('idproducto', intVal($idproducto))
-                    ->where('idwarehouse', intVal($almacen))
+                    ->where('idwarehouse', intVal($id_sucursal))
                     ->update([
                         'existencias' => $nuevaexistencia,
                     ]);
@@ -211,8 +175,8 @@ class ventasController extends Controller
     public function verproductosremision(Request $request)
     {
         $idremision = $request->id;
-        $remision   = referrals::find($idremision);
-        $productos  = json_decode($remision->productos);
+        $remision = referrals::find($idremision);
+        $productos = json_decode($remision->productos);
 
         return response()->json(['productos' => $productos], 200);
     }
@@ -223,7 +187,7 @@ class ventasController extends Controller
         $remision = $request->numero_remision;
 
         try {
-            $data     = [];
+            $data = [];
             $referral = referrals::select([
                 'r.id',
                 'r.fecha',
@@ -236,7 +200,6 @@ class ventasController extends Controller
                 'r.productos',
                 'r.total',
                 'r.estatus',
-                'p.nombre as tipo_de_precio',
                 'r.total',
                 'ar.saldo_restante as saldo_restante',
                 'ar.id as id_cxc',
@@ -245,11 +208,10 @@ class ventasController extends Controller
                 ->leftJoin('users as u', 'r.vendedor', '=', 'u.id')
                 ->leftJoin('clients as c', 'r.cliente', '=', 'c.id')
                 ->leftJoin('warehouse as w', 'r.almacen', '=', 'w.id')
-                ->leftJoin('prices as p', 'r.tipo_de_precio', '=', 'p.id')
                 ->leftJoin('accounts_receivable as ar', 'ar.remision_id', '=', 'r.id')
                 ->where('r.id', $remision)
                 ->first();
-            $datos              = json_decode($referral, true);
+            $datos = json_decode($referral, true);
             $datos['productos'] = json_decode($datos['productos'], true);
 
             $respuesta = ['data' => $datos];
@@ -257,13 +219,13 @@ class ventasController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Remisión encontrada',
-                'data'    => $respuesta,
+                'data' => $respuesta,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al buscar remisión: ' . $e->getMessage(),
-                'data'    => null,
+                'data' => null,
             ], 500);
         }
 
@@ -271,11 +233,11 @@ class ventasController extends Controller
 
     public function cortedecaja()
     {
-        $type       = $this->gettype();
-        $timezone   = 'America/Mexico_City';
+        $type = $this->gettype();
+        $timezone = 'America/Mexico_City';
         $hoy_inicio = Carbon::today($timezone)->startOfDay()->toDateTimeString();
-        $hoy_fin    = Carbon::today($timezone)->endOfDay()->toDateTimeString();
-        $id         = Auth::user()->id;
+        $hoy_fin = Carbon::today($timezone)->endOfDay()->toDateTimeString();
+        $id = Auth::user()->id;
 
         $remisiones = collect(DB::select('CALL obtenerremisiones(?, ?, ?)', [$hoy_inicio, $hoy_fin, $id]));
 
@@ -287,7 +249,7 @@ class ventasController extends Controller
 
         // Añadir formas de pago sin datos (si no existen en los resultados)
         foreach ($formas_pago_base as $forma_pago) {
-            if (! $remisiones_por_pago->has($forma_pago)) {
+            if (!$remisiones_por_pago->has($forma_pago)) {
                 $remisiones_por_pago[$forma_pago] = collect(); // Agregar un grupo vacío
             }
         }
@@ -322,32 +284,32 @@ class ventasController extends Controller
         }, $remisiones_por_pago);
 
         $totales_por_pago = [
-            "efectivo"      => array_sum(array_column($remisiones_por_pago["efectivo"], "total")),
+            "efectivo" => array_sum(array_column($remisiones_por_pago["efectivo"], "total")),
             "transferencia" => array_sum(array_column($remisiones_por_pago["transferencia"], "total")),
-            "clip"          => array_sum(array_column($remisiones_por_pago["clip"], "total")),
-            "terminal"      => array_sum(array_column($remisiones_por_pago["terminal"], "total")),
-            "mercado_pago"  => array_sum(array_column($remisiones_por_pago["mercado_pago"], "total")),
-            "vales"         => array_sum(array_column($remisiones_por_pago["vales"], "total")),
+            "clip" => array_sum(array_column($remisiones_por_pago["clip"], "total")),
+            "terminal" => array_sum(array_column($remisiones_por_pago["terminal"], "total")),
+            "mercado_pago" => array_sum(array_column($remisiones_por_pago["mercado_pago"], "total")),
+            "vales" => array_sum(array_column($remisiones_por_pago["vales"], "total")),
         ];
 
         $total_general = array_sum($totales_por_pago);
 
         return view('ventas.cortedecaja', [
-            'type'                => $type,
+            'type' => $type,
             'remisiones_por_pago' => $remisiones_por_pago,
-            'totales_por_pago'    => $totales_por_pago,
-            'total_general'       => $total_general,
+            'totales_por_pago' => $totales_por_pago,
+            'total_general' => $total_general,
         ]);
     }
 
     public function cancelarremision(Request $request)
     {
         try {
-            $idremision        = $request->id;
-            $remision          = referrals::find($idremision);
+            $idremision = $request->id;
+            $remision = referrals::find($idremision);
             $remision->estatus = "cancelada";
-            $almacen           = $remision->almacen;
-            $productos         = $remision->productos;
+            $almacen = $remision->almacen;
+            $productos = $remision->productos;
 
             $productos = json_decode($productos);
             foreach ($productos as $producto) {
@@ -359,7 +321,7 @@ class ventasController extends Controller
                     ->where('idwarehouse', intVal($almacen))
                     ->first();
 
-                $CantidadSumar   = $producto->Cantidad;
+                $CantidadSumar = $producto->Cantidad;
                 $nuevaexistencia = $existenciasActual->existencias + intVal($CantidadSumar);
 
                 productwarehouse::where('idproducto', intVal($idproducto))
@@ -369,10 +331,10 @@ class ventasController extends Controller
                     ]);
             }
 
-            $idremision        = $request->id;
-            $remision          = referrals::find($idremision);
-            $importe           = $remision->total;
-            $productos         = $remision->productos;
+            $idremision = $request->id;
+            $remision = referrals::find($idremision);
+            $importe = $remision->total;
+            $productos = $remision->productos;
             $remision->estatus = "cancelada";
             $remision->save();
 
@@ -393,14 +355,14 @@ class ventasController extends Controller
 
         try {
 
-            $corteCaja                          = new cash_closure();
-            $corteCaja->total_general           = (float) $request->total_general;
+            $corteCaja = new cash_closure();
+            $corteCaja->total_general = (float) $request->total_general;
             $corteCaja->total_efectivo_entregar = (float) $request->total_efectivo_entregar;
-            $corteCaja->formas_pago             = json_encode($request->formas_pago);              // Convertir a JSON
-            $corteCaja->inputs_adicionales      = json_encode($request->inputs_adicionales ?? []); // Convertir a JSON
-            $corteCaja->vendedor                = auth()->id() ?? 1;
-            $corteCaja->estado                  = 'pendiente';
-            $corteCaja->observaciones           = $request->observaciones ?? null;
+            $corteCaja->formas_pago = json_encode($request->formas_pago);              // Convertir a JSON
+            $corteCaja->inputs_adicionales = json_encode($request->inputs_adicionales ?? []); // Convertir a JSON
+            $corteCaja->vendedor = auth()->id() ?? 1;
+            $corteCaja->estado = 'pendiente';
+            $corteCaja->observaciones = $request->observaciones ?? null;
 
             // Guardar el usuario en la base de datos
             $corteCaja->save();
@@ -410,7 +372,7 @@ class ventasController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Corte de caja registrado correctamente',
-                'data'    => $corteCaja,
+                'data' => $corteCaja,
             ], 201);
 
         } catch (\Exception $e) {
@@ -419,8 +381,8 @@ class ventasController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al registrar el corte de caja',
-                'error'   => $e->getMessage(),
-                'trace'   => env('APP_DEBUG') ? $e->getTrace() : null,
+                'error' => $e->getMessage(),
+                'trace' => env('APP_DEBUG') ? $e->getTrace() : null,
             ], 500);
         }
     }
@@ -429,7 +391,7 @@ class ventasController extends Controller
     {
         try {
             $dateStart = Carbon::parse($request->dateStart)->startOfDay();
-            $dateEnd   = Carbon::parse($request->dateEnd)->endOfDay();
+            $dateEnd = Carbon::parse($request->dateEnd)->endOfDay();
 
             // Obtener remisiones en el rango de fechas
 

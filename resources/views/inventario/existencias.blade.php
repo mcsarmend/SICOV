@@ -20,15 +20,7 @@
                             <tr>
                                 <th>Codigo</th>
                                 <th>Producto</th>
-                                <th>Marca</th>
-                                <th>Categoria</th>
                                 <th>Existencias Totales</th>
-                                <th>Almacèn Principal</th>
-                                <th>Viveros</th>
-                                <th>TownCenter</th>
-                                <th>Coacalco</th>
-                                <th>Villas</th>
-                                <th>Naucalpan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,68 +41,45 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            var products = @json($products);
+            $('#table-products').DataTable({
+                destroy: true,
+                scrollX: true,
+                scrollCollapse: true,
+                "language": {
+                    "url": "{{ asset('js/datatables/lang/Spanish.json') }}"
+                },
+                "buttons": [
 
-            // $('#table-products').DataTable({
-            //     destroy: true,
-            //     scrollX: true,
-            //     scrollCollapse: true,
-            //     "language": {
-            //         "url": "{{ asset('js/datatables/lang/Spanish.json') }}"
-            //     },
-            //     "buttons": [
-
-            //     ],
-            //     dom: 'Blfrtip',
-            //     destroy: true,
-            //     processing: true,
-            //     sort: true,
-            //     paging: true,
-            //     lengthMenu: [
-            //         [10, 25, 50, -1],
-            //         [10, 25, 50, 'All']
-            //     ], // Personalizar el menú de longitud de visualización
+                ],
+                dom: 'Blfrtip',
+                destroy: true,
+                processing: true,
+                sort: true,
+                paging: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ], // Personalizar el menú de longitud de visualización
 
 
-            //     "data": products,
-            //     columns: [{
-            //             data: 'codigo'
-            //         },
-            //         {
-            //             data: 'producto'
-            //         },
-            //         {
-            //             data: 'marca'
-            //         },
-            //         {
-            //             data: 'categoria'
-            //         },
-            //         {
-            //             data: 'totales'
-            //         },
-            //         {
-            //             data: 'almacen_principal'
-            //         },
-            //         {
-            //             data: 'viveros'
-            //         },
-            //         {
-            //             data: 'towncenter'
-            //         },
-            //         {
-            //             data: 'coacalco'
-            //         },
-            //         {
-            //             data: 'villas'
-            //         },
-            //         {
-            //             data: 'naucalpan'
-            //         }
-            //     ],
-            //     order: [
-            //         [0, "asc"]
-            //     ],
-            //     pageLength: 50,
-            // });
+                "data": products,
+                columns: [{
+                        data: 'codigo'
+                    },
+                    {
+                        data: 'producto'
+                    },
+                    {
+                        data: 'totales'
+                    }
+
+                ],
+                order: [
+                    [0, "asc"]
+                ],
+                pageLength: 50,
+            });
             drawTriangles();
             showUsersSections();
         });

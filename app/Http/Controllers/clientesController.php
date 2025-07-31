@@ -180,7 +180,7 @@ class clientesController extends Controller
             $type = $this->gettype();
             $type = intval($type);
 
-            if ($type != 3 || $type != 4) {
+            if ($type != 3 && $type != 4) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No tienes permiso para registrar asistencias'

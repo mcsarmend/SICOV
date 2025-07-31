@@ -77,30 +77,19 @@
 
         $(document).ready(function() {
             drawTriangles();
-            showUsersSections();
+            // showUsersSections();
 
-            $('#proveedor').change(function() {
-                time = getFormattedDateTime();
-                var selectedOption = $(this).find(':selected'); // Obtén la opción seleccionada
-                var clave = "ENT";
-                var documento = time + clave; // Genera el valor del documento
-                $('#documento').val(documento); // Coloca el valor en el input
-            });
+            time = getFormattedDateTime();
+            var clave = "ENT";
+            var documento = time + clave; // Genera el valor del documento
+            $('#documento').val(documento); // Coloca el valor en el input
 
-            crearnodocumento();
+
         });
 
 
 
 
-
-        function crearnodocumento() {
-            time = getFormattedDateTime();
-            var selectedOption = $('#proveedor').find(':selected'); // Obtén la opción seleccionada
-            var clave = "ENT";
-            var documento = time + clave; // Genera el valor del documento
-            $('#documento').val(documento); // Coloca el valor en el input
-        }
 
         function buscarProducto() {
             Swal.fire({
@@ -270,18 +259,13 @@
                 }
             });
 
-            // if (sum == 0) {
-            //     Swal.fire({
-            //         title: 'No hay productos agregados',
-            //         text: 'Debe agregar al menos un producto',
-            //         icon: 'error'
-            //     });
-            //     return;
-            // }
-
-
-
-
+            if(datos == '[]') {
+                Swal.fire({
+                    title: 'No hay productos para ingresar',
+                    icon: 'warning'
+                });
+                return;
+            }
 
             // Mostrar el cuadro de diálogo de confirmación con SweetAlert
             Swal.fire({

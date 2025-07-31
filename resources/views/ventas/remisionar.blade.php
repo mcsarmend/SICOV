@@ -23,20 +23,10 @@
                     <div class="col"><label for="vendedor">Vendedor:</label></div>
                     <div class="col"><input type="text" class="form-control" id="vendedor" name = "vendedor"
                             data-value={{ $idvendedor }} value="{{ $vendedor }}" readonly></div>
-                    @if ($type == 4)
-                        <div class="col"><label for="sucursal">Sucursal:</label></div>
-                        <div class="col"><input type="text" class="form-control" id="sucursal" name = "sucursal"
-                                data-value={{ $idsucursal }} value={{ $nombresucursal->nombre }} readonly></div>
-                    @else
-                        <div class="col"><label for="sucursal">Sucursal:</label></div>
-                        <div class="col">
-                            <select name="sucursal" id="sucursal" class="form-control">
-                                @foreach ($idssucursales as $almacen)
-                                    <option value="{{ $almacen->id }}">{{ $almacen->nombre }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endif
+
+                    <div class="col"><label for="sucursal">Sucursal:</label></div>
+                    <div class="col"><input type="text" class="form-control" id="sucursal" name = "sucursal"
+                            data-value={{ $idsucursal }} value={{ $nombresucursal->name }} readonly></div>
 
 
                     <div class="col"><label for="fecha">Fecha:</label></div>
@@ -70,12 +60,7 @@
                         <div class="row" id="fila-producto">
                             <div class="col">
                                 <input type="text" id="cliente" name="cliente" list="client-list" class="form-control">
-                                <datalist id="client-list">
-                                    <option value="Mostrador">
-                                        @foreach ($clientes as $cliente)
-                                    <option value="{{ $cliente->id }}-{{ $cliente->nombre }}">
-                                        @endforeach
-                                </datalist>
+
                             </div>
 
                         </div>
@@ -146,7 +131,7 @@
         var sum = 0;
         $(document).ready(function() {
             drawTriangles();
-          //  showUsersSections();
+            //  showUsersSections();
             var type = @json($type);
             if (type == 4) {
                 $("#tipo_precio").prop("disabled", true);
@@ -183,6 +168,7 @@
 
                 <label for="inputWithDatalist">Selecciona un producto:</label>
                 <input list="datalistOptions" id="inputWithDatalist" class="form-control col-sm-14" oninput="actualizarExistencias()">
+                <input id="idproductsearch" style="display:none;" class="form-control col-sm-14" ">
                 <datalist id="datalistOptions">
                     ${generateOptions()}
                 </datalist>
@@ -214,50 +200,27 @@
                         const idproducto = obtenerNumerosHastaGuion(result.value.producto);
                         var idcliente = obtenerNumerosHastaGuion($('#cliente').val());
                         var cantidad = $('#inputCantidad').val();
-                        var idsucursal = 0;
-                        var type = @json($type);
-                        if (type == 4) {
-                            idsucursal = parseInt($('#sucursal').data('value'));
-                        } else {
-                            idsucursal = $('#sucursal').val();
-                        }
-                        var idprecio = $('#tipo_precio').val();
+                        var idsucursal = 1;
+
+
+                        var precio = $('#idproductsearch').val();
                         if (idcliente == null) {
                             idcliente = 1;
                         }
-
+                        subtotal = precio * cantidad;
                         const data = {
                             id_producto: idproducto,
                             idcliente: idcliente,
                             cantidad: cantidad,
                             sucursal: idsucursal,
-                            id_precio: idprecio
+                            precio: precio,
+                            subtotal: subtotal,
+                            nombre: result.value.producto
                         };
 
-                        $.ajax({
-                            url: 'buscarprecio', // URL a la que se hace la solicitud
-                            type: 'POST', // Tipo de solicitud (GET, POST, etc.)
-                            data: data,
-                            dataType: 'json', // Tipo de datos esperados en la respuesta
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(data) {
 
-                                agregarFila(data.idproducto, data.cantidad, data.subtotal, data.nombre,
-                                    data.precio);
+                        agregarFila(data.id_producto, data.cantidad, data.subtotal, data.nombre, data.precio);
 
-
-                            },
-                            error: function(xhr, status, error) {
-
-                                Swal.fire({
-                                    title: 'Error:',
-                                    text: xhr.responseJSON.error,
-                                    icon: 'warning'
-                                });
-                            }
-                        });
 
 
                     }
@@ -290,8 +253,7 @@
                 success: function(data) {
 
                     $('#inputExistencias').val(data.existencias);
-
-
+                    $('#idproductsearch').val(data.precio);
                 },
                 error: function(xhr, status, error) {
 
@@ -501,35 +463,7 @@
         });
 
 
-        $('#cliente').on('change', function() {
-            var cliente = $(this).val();
-            var idcliente = obtenerNumerosHastaGuion(cliente);
 
-            // Hacer la llamada AJAX
-            $.ajax({
-                url: 'buscaridprecio', // Cambia esta URL a la correcta
-                type: 'POST',
-                data: {
-                    idcliente: idcliente
-                },
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    // Actualizar el valor del input #tipo con el valor recibido
-                    if (response.nombreprecio == null) {
-                        $('#tipo_precio').val("Publico");
-                    } else {
-                        $('#tipo_precio').val(response.idprecio);
-                    }
-
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        });
 
         function validarRemision(idsucursal, hora, nota, vendedor, cliente, forma_pago, numeroRemision) {
 
@@ -599,7 +533,7 @@
                             // Agregar contenido al PDF
                             doc.setFontSize(9);
                             doc.setFont('helvetica', 'bold');
-                            doc.text('GRUPO PROGYMS', 30, 2);
+                            doc.text('INSTITUTO ZARAGOZA', 30, 2);
                             doc.text(`Sucursal: ${nombreSucursal}`, 29, 7);
                             doc.text(`Remisión No.: ${numeroRemision}`, 10, 12);
                             doc.text(`Hora.: ${hora}`, 10, 17);
@@ -664,6 +598,19 @@
                             // Guardar y mostrar el PDF
                             doc.save(`remision_${numeroRemision}.pdf`);
                             Swal.fire('Ticket impreso!', '', 'success');
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 3000);
+
+                        }else {
+                            Swal.fire(
+                                '¡Gracias por esperar!',
+                                "No se ha impreso el ticket",
+                                'info'
+                            );
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 4000);
                         }
                     });
                 },

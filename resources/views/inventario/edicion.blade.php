@@ -85,7 +85,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Tipo</th>
+                                <th>Nombre</th>
                                 <th>Precio</th>
                                 <th>Editar</th>
                             </tr>
@@ -123,7 +123,7 @@
     <script>
         $(document).ready(function() {
             drawTriangles();
-            showUsersSections();
+            // showUsersSections();
         });
 
         var products = @json($productos);
@@ -376,9 +376,9 @@
                             response.message,
                             'success'
                         );
-                        /*                     setTimeout(function() {
-                                                window.location.reload();
-                                            }, 3000); */
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 3000);
 
                     },
                     error: function(response) {
@@ -395,7 +395,8 @@
 
         function enviareditarprecioform(id, tipo) {
             nuevoprecio = '#idprecio_' + id + tipo;
-            val_nuevoprecio = $(nuevoprecio).val();
+            val_nuevoprecio = document.getElementById('idprecio_2MATEMATICAS 2DO').value;
+
             if (val_nuevoprecio == "") {
                 Swal.fire(
                     '¡Aviso!',
@@ -405,7 +406,6 @@
             } else {
                 var datosFormulario = {
                     id: id,
-                    tipo: tipo,
                     nuevo_precio: val_nuevoprecio
                 };
                 // Realizar la solicitud AJAX con jQuery

@@ -25,8 +25,7 @@
                         <th>Productos</th>
                         <th>Total</th>
                         <th>Estatus</th>
-                        <th>Es Reparto</th>
-                        <th>Asignado por</th>
+
                         <th>Imprimir</th>
                         <th>Cancelar</th>
 
@@ -93,7 +92,7 @@
     <script>
         $(document).ready(function() {
             drawTriangles();
-            showUsersSections();
+            // showUsersSections();
             var remisiones = @json($remisiones);
             $('#remisiones').DataTable({
                 destroy: true,
@@ -167,12 +166,7 @@
                     {
                         "data": "estatus"
                     },
-                    {
-                        "data": "reparto"
-                    },
-                    {
-                        "data": "vendedor_reparto"
-                    },
+
                     {
                         "data": "imprimir",
                         "render": function(data, type, row) {
