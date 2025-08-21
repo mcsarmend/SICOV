@@ -185,42 +185,72 @@
                                             <div class="col-md-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario15" value="06-07">
+                                                    <label class="form-check-label" for="horario15">06:00 -
+                                                        07:00</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario15" value="07-08">
+                                                    <label class="form-check-label" for="horario15">07:00 -
+                                                        08:00</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input horario-option" type="radio"
+                                                        name="horario_alberca" id="horario15" value="08-09">
+                                                    <label class="form-check-label" for="horario15">08:00 -
+                                                        09:00</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input horario-option" type="radio"
                                                         name="horario_alberca" id="horario15" value="15-16">
-                                                    <label class="form-check-label" for="horario15">15:00 - 16:00</label>
+                                                    <label class="form-check-label" for="horario15">15:00 -
+                                                        16:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input horario-option" type="radio"
                                                         name="horario_alberca" id="horario16" value="16-17">
-                                                    <label class="form-check-label" for="horario16">16:00 - 17:00</label>
+                                                    <label class="form-check-label" for="horario16">16:00 -
+                                                        17:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input horario-option" type="radio"
                                                         name="horario_alberca" id="horario17" value="17-18">
-                                                    <label class="form-check-label" for="horario17">17:00 - 18:00</label>
+                                                    <label class="form-check-label" for="horario17">17:00 -
+                                                        18:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input horario-option" type="radio"
                                                         name="horario_alberca" id="horario18" value="18-19">
-                                                    <label class="form-check-label" for="horario18">18:00 - 19:00</label>
+                                                    <label class="form-check-label" for="horario18">18:00 -
+                                                        19:00</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input horario-option" type="radio"
                                                         name="horario_alberca" id="horario19" value="19-20">
-                                                    <label class="form-check-label" for="horario19">19:00 - 20:00</label>
+                                                    <label class="form-check-label" for="horario19">19:00 -
+                                                        20:00</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -348,7 +378,7 @@
                 // Validar campos requeridos
 
 
-                if(!$('#alberca').is(':checked') && !$('#gimnasio').is(':checked')) {
+                if (!$('#alberca').is(':checked') && !$('#gimnasio').is(':checked')) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',

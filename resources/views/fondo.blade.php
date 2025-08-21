@@ -41,47 +41,60 @@
 
 <script>
     function drawTriangles() {
+        document.querySelectorAll(".content-wrapper canvas").forEach(el => el.remove());
         const contentWrapper = document.querySelector(".content-wrapper");
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
-
         contentWrapper.appendChild(canvas);
 
         canvas.width = contentWrapper.clientWidth;
         canvas.height = contentWrapper.clientHeight;
 
-        const colors = ["#a0101e", "#b54856", "#cc808e", "#e4b8c5"];
+        // Cielo con tonos rojizos/naranjas más intensos
+        function drawSky() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, "#FF6B6B"); // rojo claro
+            gradient.addColorStop(0.5, "#FF4E2E"); // rojo anaranjado
+            gradient.addColorStop(1, "#A62920"); // rojo oscuro
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
-        function drawRandomTriangle() {
-            const sideLength = Math.random() * 50 + 10;
-            const x = Math.random() * (canvas.width - sideLength);
-            const y = Math.random() * (canvas.height - sideLength);
-            const color = colors[Math.floor(Math.random() * colors.length)];
-
+        // Dunas con un tono rojo tierra
+        function drawDunes() {
+            ctx.fillStyle = "#C1440E"; // rojo tierra
             ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(x + sideLength, y);
-            ctx.lineTo(x + sideLength / 2, y + sideLength * Math.sqrt(3) / 2);
+            ctx.moveTo(0, canvas.height - 100);
+            for (let x = 0; x <= canvas.width; x += 50) {
+                ctx.lineTo(x, canvas.height - (Math.sin(x / 80) * 30 + 80));
+            }
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
             ctx.closePath();
+            ctx.fill();
 
-            ctx.fillStyle = color;
+            // Capa extra para profundidad
+            ctx.fillStyle = "#8B2E0B";
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - 60);
+            for (let x = 0; x <= canvas.width; x += 60) {
+                ctx.lineTo(x, canvas.height - (Math.sin(x / 60) * 20 + 50));
+            }
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
             ctx.fill();
         }
 
-        function drawRandomTriangles(numTriangles) {
-            for (let i = 0; i < numTriangles; i++) {
-                drawRandomTriangle();
-            }
-        }
+        drawSky();
+        drawDunes();
 
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', () => {
             canvas.width = contentWrapper.clientWidth;
             canvas.height = contentWrapper.clientHeight;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawRandomTriangles(50);
+            drawSky();
+            drawDunes();
         });
-
-        drawRandomTriangles(100);
     }
 
 

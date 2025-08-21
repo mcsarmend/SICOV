@@ -144,59 +144,99 @@
                                         </div>
                                     </div>
 
+
                                     <!-- Selección de horarios -->
                                     <div class="row mt-3">
                                         <div class="col-md-12">
-                                            <h5>Horarios Disponibles para Alberca*</h5>
+                                            <h5>Horarios</h5>
                                             <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-2">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input horario-option" type="radio"
-                                                                name="horario_alberca" id="horario15" value="15-16">
-                                                            <label class="form-check-label" for="horario15">15:00 -
-                                                                16:00</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input horario-option" type="radio"
-                                                                name="horario_alberca" id="horario16" value="16-17">
-                                                            <label class="form-check-label" for="horario16">16:00 -
-                                                                17:00</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input horario-option" type="radio"
-                                                                name="horario_alberca" id="horario17" value="17-18">
-                                                            <label class="form-check-label" for="horario17">17:00 -
-                                                                18:00</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input horario-option" type="radio"
-                                                                name="horario_alberca" id="horario18" value="18-19">
-                                                            <label class="form-check-label" for="horario18">18:00 -
-                                                                19:00</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input horario-option" type="radio"
-                                                                name="horario_alberca" id="horario19" value="19-20">
-                                                            <label class="form-check-label" for="horario19">19:00 -
-                                                                20:00</label>
-                                                        </div>
+                                                <select class="form-control" id="horario_alberca" name="horario_alberca"
+                                                    required>
+                                                    <option value="">Seleccione un horario</option>
+                                                    <option value="1">06:00 - 07:00</option>
+                                                    <option value="2">07:00 - 08:00</option>
+                                                    <option value="3">08:00 - 09:00</option>
+                                                    <option value="4">15:00 - 16:00</option>
+                                                    <option value="5">16:00 - 17:00</option>
+                                                    <option value="6">17:00 - 18:00</option>
+                                                    <option value="7">18:00 - 19:00</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Fecha inicio -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="fecha">Fecha de inicio:</label>
+                                                <div class="input-group date">
+                                                    <input type="text" class="form-control" id="fecha"
+                                                        name="fecha">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i
+                                                                class="fas fa-calendar-alt"></i></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Días de agenda -->
+                                    <div class="form-group">
+                                        <label class="d-block">Seleccione días:</label>
+                                        <div class="d-flex flex-wrap">
+                                            <div class="pr-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="lunes"
+                                                        name="dias[]" value="1">
+                                                    <label class="form-check-label" for="lunes">Lunes</label>
+                                                </div>
+                                            </div>
+                                            <div class="pr-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="martes"
+                                                        name="dias[]" value="2">
+                                                    <label class="form-check-label" for="martes">Martes</label>
+                                                </div>
+                                            </div>
+                                            <div class="pr-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="miercoles"
+                                                        name="dias[]" value="3">
+                                                    <label class="form-check-label" for="miercoles">Miércoles</label>
+                                                </div>
+                                            </div>
+                                            <div class="pr-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="jueves"
+                                                        name="dias[]" value="4">
+                                                    <label class="form-check-label" for="jueves">Jueves</label>
+                                                </div>
+                                            </div>
+                                            <div class="pr-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="viernes"
+                                                        name="dias[]" value="5">
+                                                    <label class="form-check-label" for="viernes">Viernes</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="sabado"
+                                                        name="dias[]" value="6">
+                                                    <label class="form-check-label" for="sabado">Sábado</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="row mt-4">
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary">Guardar Cliente</button>
@@ -212,6 +252,8 @@
 @stop
 
 @section('css')
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <style>
         .modal-dialog.custom-width {
             max-width: 55%;
@@ -227,16 +269,75 @@
 @stop
 
 @section('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js">
+    </script>
     <script>
         $(document).ready(function() {
+            $('head').append('<style>.error-border { border: 2px solid #dc3545 !important; }</style>');
+            $('#fecha').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'es',
+                autoclose: true,
+                todayHighlight: true
+            });
             drawTriangles();
             var clientes = @json($preregistration);
+
+            // Función para validar la selección de días
+
+            // Función para validar horarios vs días seleccionados
+
+
+
+
+
+
+
+
 
             // Función para manejar el envío del formulario
             $('#clientForm').submit(function(e) {
                 e.preventDefault();
 
-                // Mostrar confirmación antes de enviar
+                if ($('#alberca').is(':checked')) {
+                    const esValidoDias = validarDias();
+                    const esValidoHorario = validarHorarioVsDias();
+
+                    if (!esValidoDias) {
+                        mostrarErrorDias(true);
+                        $('input[name="dias[]"]').addClass('error-border');
+
+                        $('html, body').animate({
+                            scrollTop: $('#errorDias').offset().top - 100
+                        }, 500);
+
+                        Swal.fire({
+                            title: 'Error de validación',
+                            text: 'El número de días seleccionados debe coincidir con el número de clases del paquete',
+                            icon: 'error',
+                            confirmButtonText: 'Entendido'
+                        });
+                        return;
+                    }
+
+                    if (!esValidoHorario) {
+                        mostrarErrorHorario(true);
+
+                        $('html, body').animate({
+                            scrollTop: $('#errorHorario').offset().top - 100
+                        }, 500);
+
+                        Swal.fire({
+                            title: 'Error de validación',
+                            text: 'Los sábados solo están disponibles los horarios de 6:00 a 9:00',
+                            icon: 'error',
+                            confirmButtonText: 'Entendido'
+                        });
+                        return;
+                    }
+                }
+
                 Swal.fire({
                     title: '¿Confirmar envío?',
                     text: "¿Estás seguro de que deseas guardar este cliente?",
@@ -254,7 +355,6 @@
             });
 
             function enviarFormulario() {
-                // Mostrar loader mientras se procesa
                 Swal.fire({
                     title: 'Procesando',
                     html: 'Por favor espera mientras guardamos la información...',
@@ -264,7 +364,6 @@
                     }
                 });
 
-                // Obtener datos del formulario
                 let datos = $('#clientForm').serialize();
 
                 $.ajax({
@@ -282,10 +381,13 @@
                             icon: 'success',
                             timer: 3000,
                             timerProgressBar: true,
-                            willClose: () => {
-                                window.location.reload();
-                            }
+
                         });
+
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 3000);
+
                     },
                     error: function(xhr) {
                         let errorMessage = xhr.responseJSON && xhr.responseJSON.error ?
@@ -351,46 +453,218 @@
                 updateSections();
             });
 
-            // Función para crear cliente
+            // Validar cuando cambia la selección de días
+            $(document).on('change', 'input[name="dias[]"]', function() {
+                ejecutarValidacionesCompletas();
+            });
 
+            // Validar cuando cambia el horario
+            $(document).on('change', '#horario_alberca', function() {
+                ejecutarValidacionesCompletas();
+            });
 
+            // Validar cuando cambia el paquete seleccionado
+            $(document).on('change', '#soloAlbercaSelect, #comboSelect', function() {
+                ejecutarValidacionesCompletas();
+            });
+
+            // Vincular eventos cuando el modal se muestra
+            $('#clienteNuevo').on('shown.bs.modal', function() {
+                // Ejecutar validaciones después de que el modal esté completamente visible
+                setTimeout(function() {
+                    ejecutarValidacionesCompletas();
+                }, 300);
+            });
+
+            // Limpiar cuando el modal se cierra
+            $('#clienteNuevo').on('hidden.bs.modal', function() {
+                $('#errorDias, #errorHorario, #infoPaquete').remove();
+                $('input[name="dias[]"]').removeClass('error-border');
+                $('#horario_alberca').removeClass('error-border');
+                $('#horario_alberca').find('option').prop('disabled', false);
+            });
+
+            $('#alberca').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#horario_alberca').prop('required', true);
+                } else {
+                    $('#horario_alberca').prop('required', false);
+                }
+            });
 
         });
+        // Mostrar información del paquete al usuario
+        function actualizarInfoPaquete() {
+            const paqueteSelect = $('#soloAlbercaSelect').is(':visible') ?
+                $('#soloAlbercaSelect') : $('#comboSelect');
 
+            const paqueteValue = paqueteSelect.val();
+
+            if (paqueteValue) {
+                const numeroClases = parseInt(paqueteValue.split('_')[0]);
+
+                if ($('#infoPaquete').length === 0) {
+                    $('.form-group:has(input[name="dias[]"])').after(
+                        '<div id="infoPaquete" class="text-info mt-2" style="font-size: 14px; font-weight: bold;"></div>'
+                    );
+                }
+
+                $('#infoPaquete').text(
+                    `Paquete seleccionado: ${numeroClases} clase(s) - Seleccione ${numeroClases} día(s)`);
+            } else {
+                $('#infoPaquete').remove();
+            }
+        }
+
+        // Función para ejecutar todas las validaciones
+        function ejecutarValidacionesCompletas() {
+            const esValidoDias = validarDias();
+            const esValidoHorario = validarHorarioVsDias();
+
+            mostrarErrorDias(!esValidoDias);
+            mostrarErrorHorario(!esValidoHorario);
+            actualizarOpcionesHorario();
+            actualizarInfoPaquete();
+
+            if (!esValidoDias) {
+                $('input[name="dias[]"]').addClass('error-border');
+            } else {
+                $('input[name="dias[]"]').removeClass('error-border');
+            }
+        }
+
+        // Función para actualizar opciones de horario según días seleccionados
+        function actualizarOpcionesHorario() {
+            const sabadoSeleccionado = $('#sabado').is(':checked');
+            const selectHorario = $('#horario_alberca');
+            const horarioActual = selectHorario.val();
+
+            if (sabadoSeleccionado) {
+                selectHorario.find('option').each(function() {
+                    const valor = $(this).val();
+                    const horariosPermitidos = ['06-07', '07-08', '08-09'];
+
+                    if (valor && !horariosPermitidos.includes(valor)) {
+                        $(this).prop('disabled', true);
+                        if (valor === horarioActual) {
+                            selectHorario.val('');
+                        }
+                    } else if (valor) {
+                        $(this).prop('disabled', false);
+                    }
+                });
+            } else {
+                selectHorario.find('option').prop('disabled', false);
+            }
+        }
+        // Función para mostrar/ocultar mensaje de error de horario
+        function mostrarErrorHorario(mostrar) {
+            if (mostrar) {
+                if ($('#errorHorario').length === 0) {
+                    $('#horario_alberca').closest('.form-group').append(
+                        '<div id="errorHorario" class="text-danger mt-2" style="font-size: 14px;">' +
+                        'Los sábados solo están disponibles los horarios de 6:00 a 9:00' +
+                        '</div>'
+                    );
+                    $('#horario_alberca').addClass('error-border');
+                }
+            } else {
+                $('#errorHorario').remove();
+                $('#horario_alberca').removeClass('error-border');
+            }
+        }
+        // Función para mostrar/ocultar mensaje de error
+        function mostrarErrorDias(mostrar) {
+            if (mostrar) {
+                if ($('#errorDias').length === 0) {
+                    $('.form-group:has(input[name="dias[]"])').after(
+                        '<div id="errorDias" class="text-danger mt-2" style="font-size: 14px;">' +
+                        'El número de días seleccionados debe coincidir con el número de clases del paquete' +
+                        '</div>'
+                    );
+                }
+            } else {
+                $('#errorDias').remove();
+            }
+        }
+
+        function validarHorarioVsDias() {
+            const sabadoSeleccionado = $('#sabado').is(':checked');
+            const horarioSeleccionado = $('#horario_alberca').val();
+
+            if (sabadoSeleccionado && horarioSeleccionado) {
+                const horariosPermitidosSabado = ['06-07', '07-08', '08-09'];
+                if (!horariosPermitidosSabado.includes(horarioSeleccionado)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function validarDias() {
+            const paqueteSelect = $('#soloAlbercaSelect').is(':visible') ?
+                $('#soloAlbercaSelect') : $('#comboSelect');
+
+            const paqueteValue = paqueteSelect.val();
+
+            if (!paqueteValue) return true;
+
+            const numeroClases = parseInt(paqueteValue.split('_')[0]);
+            const diasSeleccionados = $('input[name="dias[]"]:checked').length;
+
+            return diasSeleccionados === numeroClases;
+        }
 
         function updateSections() {
             var gimnasioChecked = $('#gimnasio').is(':checked');
             var albercaChecked = $('#alberca').is(':checked');
 
-            // Mostrar/ocultar secciones
             $('#gimnasioSection').toggle(gimnasioChecked || albercaChecked);
             $('#albercaSection').toggle(albercaChecked);
 
-            // Mostrar paquetes adecuados
             if (gimnasioChecked && albercaChecked) {
+                // Mostrar combo
                 $('#soloAlbercaPackages').hide();
+                $('#soloAlbercaSelect').prop('disabled', true);
+
                 $('#comboPackages').show();
+                $('#comboSelect').prop('disabled', false);
             } else if (albercaChecked) {
-                $('#soloAlbercaPackages').show();
+                // Mostrar solo-alberca
                 $('#comboPackages').hide();
+                $('#comboSelect').prop('disabled', true);
+
+                $('#soloAlbercaPackages').show();
+                $('#soloAlbercaSelect').prop('disabled', false);
+            } else {
+                // Ninguno
+                $('#soloAlbercaPackages, #comboPackages').hide();
+                $('#soloAlbercaSelect, #comboSelect').prop('disabled', true);
             }
 
-            // Actualizar campos requeridos
             $('#observaciones').prop('required', gimnasioChecked || albercaChecked);
-            $('input[name="horario_alberca"]').prop('required', albercaChecked);
+            $('#horario_alberca').prop('required', albercaChecked);
+
+            setTimeout(function() {
+                ejecutarValidacionesCompletas();
+            }, 50);
         }
 
+
         function crearCliente(id) {
-            // Resetear el formulario primero
             $('#clientForm')[0].reset();
             $('#gimnasioSection, #albercaSection').hide();
             $('#soloAlbercaPackages, #comboPackages').hide();
             $('#preregistro_id').val(id);
 
-            // Mostrar el modal
+            $('#errorDias, #errorHorario, #infoPaquete').remove();
+            $('input[name="dias[]"]').removeClass('error-border');
+            $('#horario_alberca').removeClass('error-border');
+            $('#horario_alberca').find('option').prop('disabled', false);
+
             $('#clienteNuevo').modal('show');
 
-            // Mostrar loader en los campos principales
             $('#nombre, #telefono').val('Cargando...');
             $('#gimnasio, #alberca').prop('disabled', true);
 
@@ -408,12 +682,10 @@
                     if (response.success) {
                         const cliente = response.data;
 
-                        // Llenar campos básicos
                         $('#preregistro_id').val(cliente.id);
                         $('#nombre').val(cliente.nombre || '');
                         $('#telefono').val(cliente.telefono || '');
 
-                        // Llenar checkboxes de servicios
                         if (cliente.gimnasio) {
                             $('#gimnasio').prop('checked', true);
                         }
@@ -421,15 +693,11 @@
                             $('#alberca').prop('checked', true);
                         }
 
-                        // Actualizar secciones visibles
                         updateSections();
 
-                        // Llenar observaciones
                         $('#observaciones').val(cliente.observaciones || '');
 
-                        // Seleccionar paquete de alberca si existe
                         if (cliente.paquete_alberca && cliente.paquete_alberca !== 'Sin paquete') {
-                            // Determinar qué select mostrar
                             const soloAlbercaValues = [
                                 '1_clases_638',
                                 '2_clases_951',
@@ -451,22 +719,42 @@
                                 $('#soloAlbercaSelect').val(cliente.paquete_alberca);
                                 $('#soloAlbercaPackages').show();
                                 $('#comboPackages').hide();
+
+                                $('#comboPackages').hide();
+                                $('#comboSelect').prop('disabled', true);
+
+                                $('#soloAlbercaPackages').show();
+                                $('#soloAlbercaSelect').prop('disabled', false);
+
                             } else if (comboValues.includes(cliente.paquete_alberca)) {
                                 $('#comboSelect').val(cliente.paquete_alberca);
                                 $('#comboPackages').show();
                                 $('#soloAlbercaPackages').hide();
+
+                                // Ninguno
+                                $('#soloAlbercaPackages, #comboPackages').hide();
+                                $('#soloAlbercaSelect, #comboSelect').prop('disabled', true);
                             }
                         }
 
-                        // Seleccionar horario si existe
                         if (cliente.horario_alberca && cliente.horario_alberca !== 'Sin horario') {
-                            $(`input[name="horario_alberca"][value="${cliente.horario_alberca}"]`)
-                                .prop(
-                                    'checked', true);
+                            $('#horario_alberca').val(cliente.horario_alberca);
                         }
 
-                        // Habilitar campos
+                        // Seleccionar días si existen en los datos
+                        if (cliente.dias_seleccionados) {
+                            cliente.dias_seleccionados.forEach(dia => {
+                                $(`input[name="dias[]"][value="${dia}"]`).prop('checked', true);
+                            });
+                        }
+
                         $('#gimnasio, #alberca').prop('disabled', false);
+
+                        // EJECUTAR VALIDACIONES DESPUÉS DE CARGAR TODOS LOS DATOS
+                        setTimeout(function() {
+                            ejecutarValidacionesCompletas();
+                        }, 200);
+
                     } else {
                         alert('Error: ' + response.message);
                         $('#clienteNuevo').modal('hide');
@@ -477,6 +765,23 @@
                     $('#clienteNuevo').modal('hide');
                 }
             });
+        }
+
+        // Función global para ejecutar validaciones (accesible desde fuera)
+        function ejecutarValidacionesCompletas() {
+            const esValidoDias = validarDias();
+            const esValidoHorario = validarHorarioVsDias();
+
+            mostrarErrorDias(!esValidoDias);
+            mostrarErrorHorario(!esValidoHorario);
+            actualizarOpcionesHorario();
+            actualizarInfoPaquete();
+
+            if (!esValidoDias) {
+                $('input[name="dias[]"]').addClass('error-border');
+            } else {
+                $('input[name="dias[]"]').removeClass('error-border');
+            }
         }
     </script>
 

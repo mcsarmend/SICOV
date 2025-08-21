@@ -62,10 +62,13 @@ Route::get('clientes', [ClientesController::class, 'clientes'])
 ->middleware(['auth'])
 ->name('clientes.index'); // Aquí asignamos el nombre a la ruta
 
+Route::get('agenda', [clientesController::class, 'agenda'])->middleware(['auth']);
+Route::get('reagendar', [clientesController::class, 'reagendar'])->middleware(['auth']);
 Route::get('asistencias', [clientesController::class, 'asistencias'])->middleware(['auth']);
 Route::get('preregistro', [clientesController::class, 'preregistro'])->middleware(['auth']);
 Route::get('altacliente', [clientesController::class, 'altacliente'])->middleware(['auth']);
 Route::get('bajacliente', [clientesController::class, 'bajacliente'])->middleware(['auth']);
+Route::get('seguro', [clientesController::class, 'seguro'])->middleware(['auth']);
 Route::get('edicioncliente', [clientesController::class, 'edicioncliente'])->middleware(['auth']);
 Route::get('verdireccioncliente', [clientesController::class, 'verdireccioncliente'])->middleware(['auth']);
 Route::get('actualizarasistencias', [clientesController::class, 'actualizarasistencias'])->middleware(['auth']);

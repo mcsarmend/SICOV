@@ -429,6 +429,16 @@ return [
             'url' => '#',
             'submenu' => [
                 [
+                    'text' => 'Agenda',
+                    'url' => 'agenda',
+                    'icon' => 'fas fa-calendar-plus'
+                ],
+                [
+                    'text' => 'Reagendar',
+                    'url' => 'reagendar',
+                    'icon' => 'fas fa-calendar-check'
+                ],
+                [
                     'text' => 'Asistencias',
                     'url' => 'asistencias',
                     'icon' => 'fas fa-user-check'
@@ -457,6 +467,11 @@ return [
                     'text' => 'Lista',
                     'url' => 'clientes',
                     'icon' => 'fas fa-user-friends',
+                ],
+                [
+                    'text' => 'Seguro',
+                    'url' => 'seguro',
+                    'icon' => 'fas fa-heartbeat',
                 ],
 
             ],
