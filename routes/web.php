@@ -76,6 +76,7 @@ Route::get('consultarpagos', [clientesController::class, 'consultarpagos'])->mid
 
 
 
+Route::post('accionreagendar', [clientesController::class, 'accionreagendar'])->middleware(['auth']);
 Route::post('registrarsalida', [clientesController::class, 'registrarsalida'])->middleware(['auth']);
 Route::post('registrarasistencia', [clientesController::class, 'registrarasistencia'])->middleware(['auth']);
 Route::post('infopreregistro', [clientesController::class, 'infopreregistro'])->middleware(['auth']);

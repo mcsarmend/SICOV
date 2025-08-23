@@ -60,7 +60,7 @@ class clientesController extends Controller
             ->leftJoin('clients as c', 'a.id_cliente', '=', 'c.id')
             ->leftJoin('horarios as h', 'h.id', '=', 'a.horario')
             ->where('c.alberca', 1)
-            ->select('a.id_agenda','c.id as idcliente', 'c.nombre', 'h.descripcion', 'a.fecha_sesion')
+            ->select('a.id_agenda', 'c.id as idcliente', 'c.nombre', 'h.descripcion', 'a.fecha_sesion')
             ->get();
 
         return view('clientes.reagendar', ['clientes' => $clientes]);
@@ -213,6 +213,44 @@ class clientesController extends Controller
 
         $sucursales = warehouse::all();
         return view('clientes.edicion', ['type' => $type, 'clients' => $clients, 'sucursales' => $sucursales]);
+    }
+
+    public function accionreagendar(Request $request)
+    {
+        try {
+            $id_agenda     = $request->input('id');
+            $nueva_fecha   = $request->input('nueva_fecha');
+            $nuevo_horario = $request->input('nuevo_horario');
+
+            // Buscar el registro
+            $agenda = DB::table('agenda_cliente')->where('id_agenda', $id_agenda)->first();
+
+            if (! $agenda) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontró el registro en la agenda',
+                ], 404);
+            }
+
+            // Actualizar los datos
+            DB::table('agenda_cliente')
+                ->where('id_agenda', $id_agenda)
+                ->update([
+                    'fecha_sesion' => $nueva_fecha,
+                    'horario'      => $nuevo_horario,
+                    'reagendada'   => 1,
+                ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'La sesión fue reagendada correctamente',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al reagendar: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function consultarpagos(Request $request)
@@ -554,7 +592,7 @@ class clientesController extends Controller
         $numero_clases_semana = (int) explode('_', $paquete)[0];
         $sesiones_totales     = $numero_clases_semana * 4;
         $sesiones_usadas      = 0;
-
+        $reagendada           = 0;
         // Convertir fecha de inicio
         $fecha_inicio = DateTime::createFromFormat('d/m/Y', $request->fecha);
         if (! $fecha_inicio) {
@@ -628,6 +666,7 @@ class clientesController extends Controller
                 'fecha_fin'        => $fecha_fin->format('Y-m-d'),
                 'fecha_sesion'     => $fecha_sesion->format('Y-m-d'),
                 'estatus'          => 'PENDIENTE',
+                'reagendada'       => $reagendada,
             ]);
         }
 

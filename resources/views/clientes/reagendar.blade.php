@@ -84,9 +84,9 @@
                 "data": clientes,
                 "columns": [{
                         "data": "id_agenda"
-                    },{
+                    }, {
                         "data": "idcliente"
-                    },{
+                    }, {
                         "data": "nombre"
                     },
                     {
@@ -98,8 +98,8 @@
                     {
                         "data": "id_agenda",
                         "render": function(data, type, row) {
-                            return '<button onclick="reagendar(' + row.id +
-                                ')" class="btn btn-danger">Reagendar</button>';
+                            return '<button onclick="reagendar(' + row.id_agenda +
+                                ')" class="btn btn-warning">Reagendar</button>';
                         }
                     },
 
@@ -111,65 +111,63 @@
             //    showUsersSections();
         });
 
-        function reagendar(id) {
+        function reagendar(id_agenda) {
             Swal.fire({
-                title: 'Selecciona la nueva fecha',
-                html: `<input type="date" id="nuevaFecha" class="swal2-input">`,
-                confirmButtonText: 'Guardar',
+                title: 'Reagendar Cliente',
+                html: `
+            <input type="date" id="fecha_sesion" class="swal2-input" required>
+
+            <select class="swal2-input" id="horario_alberca" name="horario_alberca" required>
+                <option value="">Seleccione un horario</option>
+                <option value="1">06:00 - 07:00</option>
+                <option value="2">07:00 - 08:00</option>
+                <option value="3">08:00 - 09:00</option>
+                <option value="4">15:00 - 16:00</option>
+                <option value="5">16:00 - 17:00</option>
+                <option value="6">17:00 - 18:00</option>
+                <option value="7">18:00 - 19:00</option>
+            </select>
+        `,
                 showCancelButton: true,
+                confirmButtonText: 'Guardar',
                 cancelButtonText: 'Cancelar',
                 preConfirm: () => {
-                    const fecha = document.getElementById('nuevaFecha').value;
-                    if (!fecha) {
-                        Swal.showValidationMessage('Debes seleccionar una fecha');
+                    let fecha = document.getElementById('fecha_sesion').value;
+                    let horario = document.getElementById('horario_alberca').value;
+
+                    if (!fecha || !horario) {
+                        Swal.showValidationMessage('Debes seleccionar fecha y horario');
+                        return false;
                     }
-                    return fecha;
+
+                    return {
+                        fecha,
+                        horario
+                    };
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const nuevaFecha = result.value;
+                    let fecha = result.value.fecha;
+                    let horario = result.value.horario;
 
-                    Swal.fire({
-                        title: 'Procesando',
-                        html: 'Por favor espera mientras guardamos la información...',
-                        allowOutsideClick: false,
-                        didOpen: () => Swal.showLoading()
-                    });
+                    // Aquí ya tienes id_agenda, fecha y horario 👇
+                    console.log("Cliente:", id_agenda, "Fecha:", fecha, "Horario:", horario);
 
+                    // Ejemplo de petición AJAX
                     $.ajax({
-                        url: 'reagendarcliente', // Cambia a la ruta que maneja la actualización
-                        type: 'POST',
+                        url: '/accionreagendar',
+                        method: 'POST',
                         data: {
-                            id: id,
-                            fecha: nuevaFecha
-                        },
-                        dataType: 'json',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            id_agenda: id_agenda,
+                            fecha_sesion: fecha,
+                            horario_alberca: horario,
+                            _token: $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
-                            Swal.fire({
-                                title: '¡Éxito!',
-                                text: response.message,
-                                icon: 'success',
-                                timer: 3000,
-                                timerProgressBar: true,
-                                willClose: () => {
-                                    window.location.reload();
-                                }
-                            });
+                            Swal.fire('¡Reagendado!', 'La cita fue actualizada.', 'success');
                         },
                         error: function(xhr) {
-                            let errorMessage = xhr.responseJSON && xhr.responseJSON.error ?
-                                xhr.responseJSON.error :
-                                'Ocurrió un error al procesar la solicitud';
-
-                            Swal.fire({
-                                title: 'Error',
-                                text: errorMessage,
-                                icon: 'error',
-                                confirmButtonText: 'Entendido'
-                            });
+                            Swal.fire('Error', 'No se pudo reagendar.', 'error');
                         }
                     });
                 }
