@@ -9,12 +9,12 @@ class agenda extends Model
     use HasFactory;
     protected $table = 'agenda_clientes';
 
-    protected $primary_key = 'id';
+    protected $primaryKey = 'id_agenda';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'id',
+        'id_agenda',
         'id_cliente',
         'horario',
         'paquete',

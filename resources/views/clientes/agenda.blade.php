@@ -14,7 +14,10 @@
 @section('css')
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css' rel='stylesheet' />
     <style>
-
+        .fc-timegrid-slot {
+            height: 40px !important;
+            /* o el alto que prefieras */
+        }
     </style>
 @stop
 
@@ -31,7 +34,6 @@
                 locale: 'es',
                 events: {!! $events !!},
                 eventDidMount: function(info) {
-                    // Agregar tooltip
                     $(info.el).tooltip({
                         title: info.event.extendedProps.description || info.event.title,
                         placement: 'top',
@@ -39,6 +41,7 @@
                         container: 'body'
                     });
                 }
+
             });
             calendar.render();
         });

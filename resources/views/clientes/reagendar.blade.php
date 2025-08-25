@@ -23,6 +23,8 @@
                                 <th>Nombre</th>
                                 <th>Horario</th>
                                 <th>Fecha Sesiones</th>
+                                <th>Estatus</th>
+                                <th>Reagendada</th>
                                 <th>Reagendar</th>
                             </tr>
                         </thead>
@@ -96,10 +98,20 @@
                         "data": "fecha_sesion"
                     },
                     {
+                        "data": "estatus"
+                    },
+                    {
+                        "data": "reagendada",
+                    },
+                    {
                         "data": "id_agenda",
                         "render": function(data, type, row) {
-                            return '<button onclick="reagendar(' + row.id_agenda +
-                                ')" class="btn btn-warning">Reagendar</button>';
+                            if (row.reagendada === 'Sí' || row.estatus === 'REGISTRADA') {
+                                return '<button class="btn btn-secondary" disabled>Reagendar</button>';
+                            } else {
+                                return '<button onclick="reagendar(' + row.id_agenda +
+                                    ')" class="btn btn-warning">Reagendar</button>';
+                            }
                         }
                     },
 
@@ -165,6 +177,10 @@
                         },
                         success: function(response) {
                             Swal.fire('¡Reagendado!', 'La cita fue actualizada.', 'success');
+
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 3000);
                         },
                         error: function(xhr) {
                             Swal.fire('Error', 'No se pudo reagendar.', 'error');

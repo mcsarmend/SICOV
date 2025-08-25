@@ -29,6 +29,7 @@
                                 <th>Fecha de Creacion</th>
                                 <th>Estado</th>
                                 <th>Historial de pagos</th>
+                                <th>Codigo de barras</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -98,6 +99,7 @@
 @stop
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script>
         $(document).ready(function() {
             drawTriangles();
@@ -175,6 +177,12 @@
                                 ')" class="btn btn-primary">Ver</button>';
                         }
                     },
+                    {
+                        "data": "id",
+                        "render": function(data, type, row) {
+                            return `<button onclick="generarCodigoBarras(${row.id})" class="btn btn-success btn-sm">Generar Código de Barras</button>`;
+                        }
+                    },
 
 
                 ]
@@ -230,8 +238,7 @@
                             }
                         },
                         "data": data.productos,
-                        "columns": [
-                            {
+                        "columns": [{
                                 "data": "id"
                             },
                             {
@@ -259,6 +266,26 @@
                     });
                 }
             });
+        }
+
+        function generarCodigoBarras(idCliente) {
+            // Crear un canvas temporal
+            let canvas = document.createElement('canvas');
+
+            // Generar el código de barras
+            JsBarcode(canvas, idCliente.toString(), {
+                format: "CODE128",
+                displayValue: true,
+                fontSize: 18,
+                width: 2,
+                height: 50
+            });
+
+            // Crear enlace de descarga
+            let link = document.createElement('a');
+            link.href = canvas.toDataURL("image/png");
+            link.download = `codigo_barras_cliente_${idCliente}.png`;
+            link.click();
         }
     </script>
 @stop

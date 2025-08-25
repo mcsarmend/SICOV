@@ -12,7 +12,7 @@
         <div class="card-body">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="card-title" style ="font-size: 2rem">Clientes</h1>
+                    <h1 class="card-title" style ="font-size: 2rem">ALTA DE CLIENTES</h1>
                 </div>
                 <div class="card-body">
                     <table id=clientes class="table">

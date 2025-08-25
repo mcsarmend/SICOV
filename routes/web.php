@@ -64,7 +64,7 @@ Route::get('clientes', [ClientesController::class, 'clientes'])
 
 Route::get('agenda', [clientesController::class, 'agenda'])->middleware(['auth']);
 Route::get('reagendar', [clientesController::class, 'reagendar'])->middleware(['auth']);
-Route::get('asistencias', [clientesController::class, 'asistencias'])->middleware(['auth']);
+Route::get('historicoasistencias', [clientesController::class, 'historicoasistencias'])->middleware(['auth']);
 Route::get('preregistro', [clientesController::class, 'preregistro'])->middleware(['auth']);
 Route::get('altacliente', [clientesController::class, 'altacliente'])->middleware(['auth']);
 Route::get('bajacliente', [clientesController::class, 'bajacliente'])->middleware(['auth']);
@@ -73,9 +73,12 @@ Route::get('edicioncliente', [clientesController::class, 'edicioncliente'])->mid
 Route::get('verdireccioncliente', [clientesController::class, 'verdireccioncliente'])->middleware(['auth']);
 Route::get('actualizarasistencias', [clientesController::class, 'actualizarasistencias'])->middleware(['auth']);
 Route::get('consultarpagos', [clientesController::class, 'consultarpagos'])->middleware(['auth']);
+Route::get('asistenciagimnasio', [clientesController::class, 'asistenciagimnasio'])->middleware(['auth']);
+Route::get('asistenciaalberca', [clientesController::class, 'asistenciaalberca'])->middleware(['auth']);
 
 
 
+Route::post('actualizarseguro', [clientesController::class, 'actualizarseguro'])->middleware(['auth']);
 Route::post('accionreagendar', [clientesController::class, 'accionreagendar'])->middleware(['auth']);
 Route::post('registrarsalida', [clientesController::class, 'registrarsalida'])->middleware(['auth']);
 Route::post('registrarasistencia', [clientesController::class, 'registrarasistencia'])->middleware(['auth']);

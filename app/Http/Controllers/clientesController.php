@@ -25,6 +25,16 @@ class clientesController extends Controller
     }
     public function agenda()
     {
+
+        $horarios = [
+            1 => ['06:00:00', '07:00:00'],
+            2 => ['07:00:00', '08:00:00'],
+            3 => ['08:00:00', '09:00:00'],
+            4 => ['15:00:00', '16:00:00'],
+            5 => ['16:00:00', '17:00:00'],
+            6 => ['17:00:00', '18:00:00'],
+            7 => ['18:00:00', '19:00:00'],
+        ];
         $clientes = DB::table('agenda_clientes as a')
             ->leftJoin('clients as c', 'a.id_cliente', '=', 'c.id')
             ->leftJoin('horarios as h', 'h.id', '=', 'a.horario')
@@ -32,24 +42,37 @@ class clientesController extends Controller
             ->select('c.nombre', 'h.descripcion', 'a.fecha_sesion')
             ->get();
 
-        $events = [];
+        $events = agenda::select('id_agenda', 'id_cliente', 'fecha_sesion', 'estatus', 'horario', 'paquete')
+            ->get()
+            ->map(function ($item) use ($horarios) {
+                $today = now()->toDateString();
+                $color = '#3788d8'; // Default
 
-        foreach ($clientes as $c) {
-            // dividir el rango de horas (ejemplo "07-08")
-            $horario = explode('-', $c->descripcion);
+                if ($item->estatus == 'PENDIENTE') {
+                    $color = ($item->fecha_sesion < $today) ? 'red' : 'green';
+                } elseif ($item->estatus == 'REGISTRADA') {
+                    $color = '#3788d8';
+                } elseif ($item->estatus == 'TOMADA') {
+                    $color = 'yellow';
+                }
 
-            // armar horas en formato HH:MM:SS
-            $horaInicio = str_pad($horario[0], 2, '0', STR_PAD_LEFT) . ':00:00';
-            $horaFin    = str_pad($horario[1], 2, '0', STR_PAD_LEFT) . ':00:00';
+                // Traducir horario a horas reales
+                $hora  = $horarios[$item->horario] ?? ['08:00:00', '09:00:00'];
+                $start = $item->fecha_sesion . 'T' . $hora[0];
+                $end   = $item->fecha_sesion . 'T' . $hora[1];
 
-            // evento con fecha + hora exacta
-            $events[] = [
-                'title' => $c->nombre,
-                'start' => $c->fecha_sesion . ' ' . $horaInicio,
-                'end'   => $c->fecha_sesion . ' ' . $horaFin,
-                'color' => '#0ea5a4',
-            ];
-        }
+                return [
+                    'title'         => $item->paquete . ' (' . $item->horario . ')',
+                    'start'         => $start,
+                    'end'           => $end,
+                    'extendedProps' => [
+                        'description' => $item->estatus,
+                        'cliente_id'  => $item->id_cliente,
+                        'id_agenda'   => $item->id_agenda,
+                    ],
+                    'color'         => $color,
+                ];
+            });
         return view('clientes.agenda', [
             'events' => json_encode($events),
         ]);
@@ -60,8 +83,13 @@ class clientesController extends Controller
             ->leftJoin('clients as c', 'a.id_cliente', '=', 'c.id')
             ->leftJoin('horarios as h', 'h.id', '=', 'a.horario')
             ->where('c.alberca', 1)
-            ->select('a.id_agenda', 'c.id as idcliente', 'c.nombre', 'h.descripcion', 'a.fecha_sesion')
-            ->get();
+            ->select('a.id_agenda', 'c.id as idcliente', 'c.nombre', 'h.descripcion', 'a.fecha_sesion', 'a.estatus', 'a.reagendada as reagendada')
+            ->get()
+            ->map(function ($item) {
+                // Transformar booleanos a texto
+                $item->reagendada = $item->reagendada ? 'Sí' : 'No';
+                return $item;
+            });
 
         return view('clientes.reagendar', ['clientes' => $clientes]);
     }
@@ -119,7 +147,7 @@ class clientesController extends Controller
         $type = $this->gettype();
         return view('clientes.baja', ['type' => $type, 'clients' => $clients]);
     }
-    public function asistencias()
+    public function asistenciaalberca()
     {
 
         $type    = $this->gettype();
@@ -127,35 +155,77 @@ class clientesController extends Controller
 
         $tipo = intval(Auth::user()->role);
 
-        if ($tipo == 3 || $tipo == 4) {
-            $attendances = attendance::select([
-                'attendance.check_in',
-                'attendance.check_out',
-                'attendance.package_type',
-                'attendance.classes_remaining',
-                'clients.nombre',
-                'clients.id',
-            ])
-                ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
-                ->whereDate('attendance.check_in', today())
-                ->where('attendance.type', Auth::user()->role)
-                ->get();
-        } else {
-            $attendances = attendance::select([
-                'attendance.check_in',
-                'attendance.check_out',
-                'attendance.package_type',
-                'attendance.classes_remaining',
-                'clients.nombre',
-                'clients.id',
-            ])
-                ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
-                ->whereDate('attendance.check_in', today())
-                ->get();
-        }
+        $attendances = attendance::select([
+            'attendance.check_in',
+            'attendance.check_out',
+            'attendance.package_type',
+            'attendance.classes_remaining',
+            'clients.nombre',
+            'clients.id',
+        ])
+            ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
+            ->whereDate('attendance.check_in', today())
+            ->where('attendance.type', 1)
+            ->get();
 
-        return view('clientes.asistencias', ['type' => $type, 'clients' => $clients, 'attendances' => $attendances, 'tipo' => $tipo]);
+        return view('clientes.asistenciaalberca', ['type' => $type, 'clients' => $clients, 'attendances' => $attendances, 'tipo' => $tipo]);
     }
+    public function historicoasistencias()
+    {
+
+        $tipo = [
+            1 => 'ALBERCA',
+            2 => 'GIMNASIO',
+        ];
+
+        $type    = $this->gettype();
+        $clients = clients::all();
+
+        $clients = attendance::select([
+            'attendance.check_in',
+            'attendance.check_out',
+            'attendance.package_type',
+            'attendance.classes_remaining',
+            'attendance.type',
+            'clients.nombre',
+            'clients.id',
+        ])
+            ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
+            ->whereDate('attendance.check_in', today())
+            ->get()
+            ->map(function ($item) use ($tipo) {
+                // Transformar booleanos a texto
+                $item->type             = $tipo[$item->type];
+                $item->fecha_asistencia = \Carbon\Carbon::parse($item->check_in)->toDateString();
+                return $item;
+            });
+
+        return view('clientes.historicoasistencias', ['type' => $type, 'clients' => $clients, 'tipo' => $tipo]);
+    }
+
+    public function asistenciagimnasio()
+    {
+        $type    = $this->gettype();
+        $clients = clients::all();
+
+        $tipo = intval(Auth::user()->role);
+
+        $attendances = attendance::select([
+            'attendance.check_in',
+            'attendance.check_out',
+            'attendance.package_type',
+            'attendance.classes_remaining',
+            'clients.nombre',
+            'clients.id',
+        ])
+            ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
+            ->whereDate('attendance.check_in', today())
+            ->where('attendance.type', 2)
+            ->get();
+
+        return view('clientes.asistenciagimnasio', ['type' => $type, 'clients' => $clients, 'attendances' => $attendances, 'tipo' => $tipo]);
+    }
+
     public function seguro()
     {
         $type    = $this->gettype();
@@ -163,20 +233,41 @@ class clientesController extends Controller
             'clients.id',
             'clients.nombre',
             'clients.status',
+            'clients.idseguro',
         )
             ->orderBy('clients.id', 'desc')
             ->get()
             ->map(function ($item) {
                 // Transformar booleanos a texto
                 $item->status = $item->status ? 'Activo' : 'Inactivo';
-
-                // Agregar número aleatorio entre 1 y 300 con el nombre "idseguro"
-                $item->idseguro = rand(1, 300);
-
                 return $item;
             });
 
         return view('clientes.seguro', ['type' => $type, 'clients' => $clients]);
+    }
+    public function actualizarSeguro(Request $request)
+    {
+
+        try {
+            // Buscar el cliente
+            $cliente = clients::findOrFail($request->cliente_id);
+
+            // Actualizar el seguro
+            $cliente->idseguro = $request->idseguro;
+            $cliente->save();
+
+            // Responder con éxito
+            return response()->json([
+                'success' => true,
+                'message' => 'Seguro actualizado correctamente',
+            ]);
+        } catch (\Exception $e) {
+            // Responder con error
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el seguro: ' . $e->getMessage(),
+            ], 500);
+        }
     }
     public function clientes()
     {
@@ -218,12 +309,12 @@ class clientesController extends Controller
     public function accionreagendar(Request $request)
     {
         try {
-            $id_agenda     = $request->input('id');
-            $nueva_fecha   = $request->input('nueva_fecha');
-            $nuevo_horario = $request->input('nuevo_horario');
+            $id_agenda     = $request->input('id_agenda');
+            $nueva_fecha   = $request->input('fecha_sesion');
+            $nuevo_horario = $request->input('horario_alberca');
 
             // Buscar el registro
-            $agenda = DB::table('agenda_cliente')->where('id_agenda', $id_agenda)->first();
+            $agenda = DB::table('agenda_clientes')->where('id_agenda', $id_agenda)->first();
 
             if (! $agenda) {
                 return response()->json([
@@ -233,7 +324,7 @@ class clientesController extends Controller
             }
 
             // Actualizar los datos
-            DB::table('agenda_cliente')
+            DB::table('agenda_clientes')
                 ->where('id_agenda', $id_agenda)
                 ->update([
                     'fecha_sesion' => $nueva_fecha,
@@ -273,16 +364,9 @@ class clientesController extends Controller
     {
         try {
 
-            $type = $this->gettype();
-            $type = intval($type);
+            // 1 es para alberca 2 es para gimnasio
+            $type = $request->input('type');
 
-            if ($type != 3 && $type != 4) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para registrar asistencias',
-                ], 403);
-            }
-            // Configurar timezone para México
             date_default_timezone_set('America/Mexico_City');
 
             $client = clients::findOrFail($request->client_id);
@@ -291,94 +375,104 @@ class clientesController extends Controller
             $nowMexico   = now('America/Mexico_City');
             $todayMexico = $nowMexico->toDateString();
 
-            // 1. Verificar registro activo hoy
-            $existingAttendance = Attendance::where('client_id', $client->id)
-                ->whereDate('check_in', $todayMexico)
-                ->whereNull('check_out')
-                ->first();
+            if ($type == 1) {
 
-            if ($existingAttendance) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Ya tienes un registro de asistencia activo hoy',
-                ]);
-            }
-
-            $alberca = $client->alberca;
-
-            if ($alberca) {
-
-                // 2. Extraer límites del paquete
-                $packageParts       = explode('_', $client->paquete_alberca);
-                $maxClassesPerWeek  = (int) $packageParts[0];
-                $maxClassesPerMonth = $maxClassesPerWeek * 4;
-
-                // 3. Contar asistencias SEMANALES (usando hora de México)
-                $startOfWeek = $nowMexico->copy()->startOfWeek();
-                $endOfWeek   = $nowMexico->copy()->endOfWeek();
-
-                $weeklyCount = Attendance::where('client_id', $client->id)
-                    ->whereBetween('check_in', [$startOfWeek, $endOfWeek])
-                    ->count();
-
-                // 4. Contar asistencias MENSUALES (usando hora de México)
-                $startOfMonth = $nowMexico->copy()->startOfMonth();
-                $endOfMonth   = $nowMexico->copy()->endOfMonth();
-
-                $monthlyCount = Attendance::where('client_id', $client->id)
-                    ->whereBetween('check_in', [$startOfMonth, $endOfMonth])
-                    ->count();
-                // 5. Validar límites
-                if ($weeklyCount >= $maxClassesPerWeek) {
+                // ALBERCA
+                if ($client->alberca == 0) {
                     return response()->json([
-                        'success'       => false,
-                        'message'       => 'Límite semanal alcanzado: ' . $weeklyCount . '/' . $maxClassesPerWeek,
-                        'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth,
+                        'success' => false,
+                        'message' => 'EL CLIENTE NO TIENE PAQUETE DE ALBERCA',
                     ]);
                 }
 
-                $message_monthly = $monthlyCount + 1 . '/' . $maxClassesPerMonth;
-                if ($monthlyCount >= $maxClassesPerMonth) {
+                $asistencia = attendance::where('client_id', $client->id)
+                    ->whereDate('check_in', $todayMexico)
+                    ->whereNull('check_out')
+                    ->where('type', 1)
+                    ->first();
+
+                $agenda = agenda::where('id_cliente', $client->id)
+                    ->whereDate('fecha_sesion', $todayMexico)
+                    ->first();
+                if ($agenda == null) {
                     return response()->json([
-                        'success'       => false,
-                        'message'       => 'Límite mensual alcanzado: ' . $monthlyCount . '/' . $maxClassesPerMonth,
-                        'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth,
+                        'success' => false,
+                        'message' => 'NO HAY SESIÓN REGISTRADA PARA HOY',
                     ]);
                 }
 
+                if ($agenda->estatus == "REGISTRADA" || $asistencia) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'YA CUENTA CON ASISTENCIA',
+
+                    ]);
+
+                } else {
+                    // Registrar nueva asistencia
+                    $attendance               = new Attendance();
+                    $attendance->client_id    = $client->id;
+                    $attendance->check_in     = $nowMexico;
+                    $attendance->package_type = $client->paquete_alberca;
+                    $attendance->type         = $type;
+
+                    $agenda = agenda::where('id_cliente', $client->id)
+                        ->whereDate('fecha_sesion', '<=', $todayMexico)
+                        ->orderBy('fecha_sesion', 'desc')
+                        ->first();
+                    $sesiones_usadas = $agenda->sesiones_usadas + 1;
+
+                    $agenda->sesiones_usadas = $sesiones_usadas;
+                    $agenda->estatus         = "REGISTRADA";
+
+                    $attendance->classes_remaining = $agenda->sesiones_usadas . "/" . $agenda->sesiones_totales;
+
+                    $agenda->save();
+                    $attendance->save();
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Asistencia registrada exitosamente',
+
+                    ]);
+
+                }
             } else {
-                $maxClassesPerMonth = 24;
-                $startOfMonth       = $nowMexico->copy()->startOfMonth();
-                $endOfMonth         = $nowMexico->copy()->endOfMonth();
-
-                $monthlyCount = Attendance::where('client_id', $client->id)
-                    ->whereBetween('check_in', [$startOfMonth, $endOfMonth])
-                    ->count();
-                $message_monthly = $monthlyCount + 1 . '/' . $maxClassesPerMonth;
-                if ($monthlyCount >= $maxClassesPerMonth) {
+                // GIMNASIO
+                $asistencia = attendance::where('client_id', $client->id)
+                    ->whereDate('check_in', $todayMexico)
+                    ->whereNull('check_out')
+                    ->where('type', 2)
+                    ->first();
+                if ($client->gimnasio == 0) {
                     return response()->json([
-                        'success'       => false,
-                        'message'       => 'Límite mensual alcanzado: ' . $monthlyCount . '/' . $maxClassesPerMonth,
-                        'monthly_usage' => $monthlyCount . '/' . $maxClassesPerMonth,
+                        'success' => false,
+                        'message' => 'EL CLIENTE NO TIENE PAQUETE DE GIMNASIO',
+                    ]);
+                }
+                if ($asistencia) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'YA CUENTA CON ASISTENCIA',
+
+                    ]);
+                } else {
+                    // Registrar nueva asistencia con hora de México
+                    $attendance               = new Attendance();
+                    $attendance->client_id    = $client->id;
+                    $attendance->check_in     = $nowMexico;
+                    $attendance->package_type = $client->paquete_alberca;
+                    // $attendance->classes_remaining = $message_monthly;
+                    $attendance->type = $type;
+                    $attendance->save();
+
+                    // Devolver respuesta con contadores actualizados
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Asistencia registrada exitosamente',
+
                     ]);
                 }
             }
-
-            // 6. Registrar nueva asistencia con hora de México
-            $attendance                    = new Attendance();
-            $attendance->client_id         = $client->id;
-            $attendance->check_in          = $nowMexico;
-            $attendance->package_type      = $client->paquete_alberca;
-            $attendance->classes_remaining = $message_monthly;
-            $attendance->type              = auth()->user()->role; // Asignar tipo de acceso del usuario
-            $attendance->save();
-
-            // 7. Devolver respuesta con contadores actualizados
-            return response()->json([
-                'success' => true,
-                'message' => 'Asistencia registrada exitosamente',
-
-            ]);
 
         } catch (\Exception $e) {
             return response()->json([

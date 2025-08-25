@@ -26,7 +26,8 @@ class clients extends Model
         'horario_alberca',
         'tipo',
         'idusuario',
-        'fecha_creacion'
+        'fecha_creacion',
+        'idseguro'
     ];
 
     protected $guarded = [];

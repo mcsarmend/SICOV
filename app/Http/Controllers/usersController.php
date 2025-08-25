@@ -6,8 +6,9 @@ use App\Models\warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 class usersController extends Controller
 {
 
@@ -31,21 +32,35 @@ class usersController extends Controller
         $type = $this->gettype();
         return view('usuarios.usuarios', ['usuarios' => $usuarios, 'type' => $type, 'idssucursales' => $idssucursales]);
     }
-        public function listausuarios()
+    public function listausuarios()
     {
+        $roles = [
+            1 => 'Super Administrador',
+            2 => 'Facturas/Vendedor',
+            3 => 'Instructor Gimnasio',
+            4 => 'Instructor Alberca',
+        ];
+
         $users = User::select(
             'users.name as nombre',
             'users.email as correo',
             'users.pass as contrasena',
-            'users.fecha_creacion  telefono',
             'users.role as rol',
-            'warehouse.nombre as sucursal',
             DB::raw('CASE WHEN users.status = 1 THEN "Activo" ELSE "Inactivo" END as estatus')
         )
-            ->leftJoin('warehouse', 'users.warehouse', '=', 'warehouse.id')
-            ->get();
+            ->get()
+            ->map(function ($item) use ($roles) {
+                // Transformar el rol numérico a texto usando el map
+                $item->rol = $roles[$item->rol] ?? 'Desconocido';
+                return $item;
+            });
+
         $type = $this->gettype();
-        return view('usuarios.lista', ['type' => $type, 'users' => $users]);
+
+        return view('usuarios.lista', [
+            'type'  => $type,
+            'users' => $users,
+        ]);
     }
 
     public function crearusuario(Request $request)
@@ -62,15 +77,15 @@ class usersController extends Controller
             ]);
 
             // Crear una nueva instancia del modelo Usuario
-            $usuario               = new User();
-            $usuario->name         = $request->usuario;
-            $usuario->password     = Hash::make($request->contrasena);
-            $usuario->pass         = $request->contrasena;
-            $usuario->role         = $request->tipo;
-            $usuario->email        = $request->email;
-            $usuario->phone        = $request->telefono;
+            $usuario           = new User();
+            $usuario->name     = $request->usuario;
+            $usuario->password = Hash::make($request->contrasena);
+            $usuario->pass     = $request->contrasena;
+            $usuario->role     = $request->tipo;
+            $usuario->email    = $request->email;
+            $usuario->phone    = $request->telefono;
 
-            $usuario->status       = 1;
+            $usuario->status = 1;
 
             // Guardar el usuario en la base de datos
             $usuario->save();

@@ -201,5 +201,62 @@
                 }
             });
         }
+
+
+        function modificarSeguro(clienteId) {
+            Swal.fire({
+                title: 'Modificar Seguro',
+                input: 'text', // Puedes cambiar a 'number' si solo son IDs
+                inputLabel: 'Ingrese el nuevo ID del seguro',
+                inputPlaceholder: 'Ej: 123',
+                showCancelButton: true,
+                confirmButtonText: 'Actualizar',
+                cancelButtonText: 'Cancelar',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Debes ingresar un valor!';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let nuevoSeguro = result.value;
+
+                    $.ajax({
+                        url: '/actualizarseguro', // Tu ruta POST en Laravel
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            cliente_id: clienteId,
+                            idseguro: nuevoSeguro
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Actualizado',
+                                    text: response.message
+                                });
+                                setTimeout(function() {
+                                    window.location.reload();
+                                }, 3000);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se pudo actualizar el seguro: ' + error
+                            });
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @stop

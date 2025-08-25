@@ -21,9 +21,7 @@
                                 <th>Nombre</th>
                                 <th>Correo</th>
                                 <th>Contraseña</th>
-                                <th>Telefono</th>
                                 <th>Rol</th>
-                                <th>Sucursal</th>
                                 <th>Estatus</th>
 
                             </tr>
@@ -46,7 +44,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            var vendedores = @json($users);
+            var usuarios = @json($users);
             $('#prices').DataTable({
                 destroy: true,
                 scrollX: true,
@@ -82,7 +80,7 @@
                         columns: ':visible' // Exportar solo las columnas visibles
                     }
                 },
-                "data": vendedores,
+                "data": usuarios,
                 "columns": [{
                         "data": "nombre"
                     }, {
@@ -92,13 +90,7 @@
                         "data": "contrasena"
                     },
                     {
-                        "data": "telefono"
-                    },
-                    {
                         "data": "rol"
-                    },
-                    {
-                        "data": "sucursal"
                     },
                     {
                         "data": "estatus"
@@ -106,7 +98,6 @@
                 ]
             });
             drawTriangles();
-            showUsersSections();
         });
     </script>
 @stop

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Registro de Asistencia')
+@section('title', 'Registro de Asistencia ALBERCA')
 
 @section('content_header')
 @stop
@@ -9,7 +9,7 @@
     <br>
     <div class="card">
         <div class="card-header">
-            <h1>Registro de Asistencia/Salida</h1>
+            <h1>Registro de Asistencia/Salida ALBERCA</h1>
         </div>
         <div class="card-body" style="width: 100%">
             <!-- Fecha actual -->
@@ -30,12 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="invisible">.</label>
-                        <button class="btn btn-primary btn-block" id="registrarAsistencia">Registrar Entrada</button>
-                    </div>
-                </div>
+
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="invisible">.</label>
@@ -267,7 +262,7 @@
                                 $(row).addClass('bg-danger-light');
                             }
                             break;
-                        // alberca
+                            // alberca
                         case 4:
                             // 1 hora
                             if (diffMinutes < 45) {
@@ -336,20 +331,39 @@
             @endforeach
         ];
 
-        // Autocompletar con jQuery UI
         $("#clienteInput").autocomplete({
             source: clientes,
             select: function(event, ui) {
-                // Cuando el usuario selecciona una opción
-                $("#clienteInput").val(ui.item.value); // Mostrar nombre
-                $("#clienteId").val(ui.item.id); // Guardar ID oculto
-                $("#clienteNombre").val(ui.item.value.split(' - ')[
-                    0]); // Guardar solo el nombre sin estado
+                $("#clienteInput").val(ui.item.value); // nombre
+                $("#clienteId").val(ui.item.id); // id
                 return false;
             }
+        }).data("ui-autocomplete")._renderItem = function(ul, item) {
+            return $("<li>")
+                .append("<div>" + item.id + " - " + item.value + "</div>")
+                .appendTo(ul);
+        };
+
+        // Detectar cuando el usuario escribe un número (ID)
+        $("#clienteInput").on("change", function() {
+            let valor = $(this).val().trim();
+
+            // Verificar si es número
+            if ($.isNumeric(valor)) {
+                // Buscar en la lista de clientes
+                let cliente = clientes.find(c => c.id == valor);
+
+                if (cliente) {
+                   registrarAsistencia(cliente.id,cliente.value);
+                } else {
+                    Swal.fire({
+                        title: "No encontrado",
+                        text: "No existe un cliente con ese ID",
+                        icon: "error"
+                    });
+                }
+            }
         });
-
-
 
         // Registrar salida desde los botones de la tabla
         $(document).on('click', '.registrar-salida-btn', function() {
@@ -411,18 +425,10 @@
 
 
 
-        $('#registrarAsistencia').click(function() {
-            const clienteId = $('#clienteId').val();
-            const clienteNombre = $('#clienteNombre').val();
+        function registrarAsistencia(clienteId, clienteNombre) {
 
-            if (!clienteId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Por favor seleccione un cliente válido',
-                });
-                return;
-            }
+
+
 
             // Mostrar confirmación con SweetAlert
             Swal.fire({
@@ -442,7 +448,8 @@
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            client_id: clienteId
+                            client_id: clienteId,
+                            type: 1
                         },
                         success: function(response) {
                             if (response.success) {
@@ -474,6 +481,6 @@
                     });
                 }
             });
-        });
+        }
     </script>
 @stop
