@@ -14,6 +14,7 @@ class usersController extends Controller
 
     public function gettype()
     {
+        $type ="";
         if (Auth::check()) {
             $type = Auth::user()->role;
         }
@@ -167,12 +168,8 @@ class usersController extends Controller
 
     }
 
-    public function obtenerTipo(Request $request)
-    {
-        $usuarioEncriptado      = $request->id;
-        $usuarioIdDesencriptado = Crypt::decrypt($usuarioEncriptado);
-        $usuario                = User::find($usuarioIdDesencriptado);
-        return response()->json(['tipo' => $usuario->type]);
-    }
+
+
+
 
 }

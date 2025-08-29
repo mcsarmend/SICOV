@@ -248,34 +248,12 @@
                     diffMinutes = Math.floor((now - checkIn) / 1000 / 60);
 
 
-
-
-                    switch (tipo) {
-                        // Gimnasio
-                        case 3:
-                            // 2 horas
-                            if (diffMinutes < 105) {
-                                $(row).addClass('bg-success-light');
-                            } else if (diffMinutes >= 105 && diffMinutes < 115) {
-                                $(row).addClass('bg-warning-light');
-                            } else {
-                                $(row).addClass('bg-danger-light');
-                            }
-                            break;
-                            // alberca
-                        case 4:
-                            // 1 hora
-                            if (diffMinutes < 45) {
-                                $(row).addClass('bg-success-light');
-                            } else if (diffMinutes >= 45 && diffMinutes < 55) {
-                                $(row).addClass('bg-warning-light');
-                            } else {
-                                $(row).addClass('bg-danger-light');
-                            }
-                            break;
-                        default:
-
-                            break;
+                    if (diffMinutes < 105) {
+                        $(row).addClass('bg-success-light');
+                    } else if (diffMinutes >= 105 && diffMinutes < 115) {
+                        $(row).addClass('bg-warning-light');
+                    } else {
+                        $(row).addClass('bg-danger-light');
                     }
 
 
@@ -287,7 +265,14 @@
             function actualizarTabla() {
                 $.ajax({
                     url: '/actualizarasistencias', // Ruta donde devuelves los datos (AJAX JSON)
-                    method: 'GET',
+                    method: 'POST',
+                    data: {
+                        // Gimnasio
+                        type: 2
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(response) {
                         const table = $('#atendanceTable').DataTable();
                         table.clear().rows.add(response).draw();
@@ -305,8 +290,6 @@
             $('#actualizarTabla').on('click', function() {
                 actualizarTabla();
             });
-
-
         });
 
         function formatTimeElapsed(checkIn, checkOut = null) {
@@ -354,7 +337,7 @@
                 let cliente = clientes.find(c => c.id == valor);
 
                 if (cliente) {
-                   registrarAsistencia(cliente.id,cliente.value);
+                    registrarAsistencia(cliente.id, cliente.value);
                 } else {
                     Swal.fire({
                         title: "No encontrado",

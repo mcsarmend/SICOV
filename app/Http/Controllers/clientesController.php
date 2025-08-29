@@ -35,14 +35,19 @@ class clientesController extends Controller
             6 => ['17:00:00', '18:00:00'],
             7 => ['18:00:00', '19:00:00'],
         ];
-        $clientes = DB::table('agenda_clientes as a')
-            ->leftJoin('clients as c', 'a.id_cliente', '=', 'c.id')
-            ->leftJoin('horarios as h', 'h.id', '=', 'a.horario')
-            ->where('c.alberca', 1)
-            ->select('c.nombre', 'h.descripcion', 'a.fecha_sesion')
-            ->get();
 
-        $events = agenda::select('id_agenda', 'id_cliente', 'fecha_sesion', 'estatus', 'horario', 'paquete')
+        $events = Agenda::select(
+            'agenda_clientes.id_agenda',
+            'agenda_clientes.id_cliente',
+            'c.nombre as nombre_cliente',
+            'agenda_clientes.fecha_sesion',
+            'agenda_clientes.estatus',
+            'agenda_clientes.horario as horario_id',
+            'h.descripcion as horario_desc',
+            'agenda_clientes.paquete'
+        )
+            ->leftJoin('clients as c', 'agenda_clientes.id_cliente', '=', 'c.id')
+            ->leftJoin('horarios as h', 'agenda_clientes.horario', '=', 'h.id')
             ->get()
             ->map(function ($item) use ($horarios) {
                 $today = now()->toDateString();
@@ -56,19 +61,20 @@ class clientesController extends Controller
                     $color = 'yellow';
                 }
 
-                // Traducir horario a horas reales
-                $hora  = $horarios[$item->horario] ?? ['08:00:00', '09:00:00'];
+                // Usar el ID de horario
+                $hora  = $horarios[$item->horario_id] ?? ['08:00:00', '09:00:00'];
                 $start = $item->fecha_sesion . 'T' . $hora[0];
                 $end   = $item->fecha_sesion . 'T' . $hora[1];
 
                 return [
-                    'title'         => $item->paquete . ' (' . $item->horario . ')',
+                    'title'         => $item->nombre_cliente,
                     'start'         => $start,
                     'end'           => $end,
                     'extendedProps' => [
-                        'description' => $item->estatus,
-                        'cliente_id'  => $item->id_cliente,
-                        'id_agenda'   => $item->id_agenda,
+                        'description'  => $item->estatus,
+                        'horario_desc' => $item->horario_desc,
+                        'cliente_id'   => $item->id_cliente,
+                        'id_agenda'    => $item->id_agenda,
                     ],
                     'color'         => $color,
                 ];
@@ -283,8 +289,9 @@ class clientesController extends Controller
             'clients.fecha_creacion',
             'clients.status',
             DB::raw('COALESCE(clients.paquete_alberca, "Sin paquete") as paquete_alberca'),
-            DB::raw('COALESCE(clients.horario_alberca, "Sin horario") as horario_alberca'),
+            DB::raw('COALESCE(h.descripcion, "Sin horario") as horario_alberca'),
         )
+            ->leftjoin('horarios as h', 'h.id', '=', 'clients.horario_alberca')
             ->orderBy('clients.id', 'desc')
             ->get()
             ->map(function ($item) {
@@ -304,6 +311,46 @@ class clientesController extends Controller
 
         $sucursales = warehouse::all();
         return view('clientes.edicion', ['type' => $type, 'clients' => $clients, 'sucursales' => $sucursales]);
+    }
+
+    public function reportehistoricoasistencias(Request $request)
+    {
+        try {
+            $tipo = [
+                1 => 'ALBERCA',
+                2 => 'GIMNASIO',
+            ];
+
+            $fecha_inicio = $request->input('dateStart');
+            $fecha_fin    = $request->input('dateEnd');
+
+            $type = $this->gettype();
+
+            $attendances = attendance::select([
+                'attendance.check_in',
+                'attendance.check_out',
+                'attendance.package_type',
+                'attendance.classes_remaining',
+                'attendance.type',
+                'clients.nombre',
+                'clients.id',
+            ])
+                ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
+                ->whereDate('attendance.check_in', '>=', $fecha_inicio)
+                ->whereDate('attendance.check_in', '<=', $fecha_fin)
+                ->get()
+                ->map(function ($item) use ($tipo) {
+                    // Transformar booleanos a texto
+                    $item->type             = $tipo[$item->type];
+                    $item->fecha_asistencia = \Carbon\Carbon::parse($item->check_in)->toDateString();
+                    return $item;
+                });
+
+            return response()->json(['message' => 'Reporte Generado Correctamente', 'asistencias' => $attendances], 200);
+        } catch (\Throwable $th) {
+
+            return response()->json(['message' => 'Error al generar el reporte' . $th->getMessage()], 500);
+        }
     }
 
     public function accionreagendar(Request $request)
@@ -530,34 +577,20 @@ class clientesController extends Controller
 
         try {
 
-            $type = $this->gettype();
-            $type = intval($type);
-            if ($type == 3 || $type == 4) {
-                $attendances = attendance::select([
-                    'attendance.check_in',
-                    'attendance.check_out',
-                    'attendance.package_type',
-                    'attendance.classes_remaining',
-                    'clients.nombre',
-                    'clients.id',
-                ])
-                    ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
-                    ->whereDate('attendance.check_in', today())
-                    ->where('attendance.type', Auth::user()->role)
-                    ->get();
-            } else {
-                $attendances = attendance::select([
-                    'attendance.check_in',
-                    'attendance.check_out',
-                    'attendance.package_type',
-                    'attendance.classes_remaining',
-                    'clients.nombre',
-                    'clients.id',
-                ])
-                    ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
-                    ->whereDate('attendance.check_in', today())
-                    ->get();
-            }
+            $type = $request->input('type');
+
+            $attendances = attendance::select([
+                'attendance.check_in',
+                'attendance.check_out',
+                'attendance.package_type',
+                'attendance.classes_remaining',
+                'clients.nombre',
+                'clients.id',
+            ])
+                ->leftJoin('clients', 'attendance.client_id', '=', 'clients.id')
+                ->whereDate('attendance.check_in', today())
+                ->where('attendance.type', $type)
+                ->get();
 
             return response()->json($attendances);
         } catch (\Throwable $th) {

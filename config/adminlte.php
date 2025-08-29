@@ -310,6 +310,116 @@ return [
         // ['header' => 'account_settings'],
 
         [
+            'text'    => 'Usuarios',
+            'icon'    => 'fas fa-user-tie',
+
+            'url'     => '#',
+            'submenu' => [
+                [
+                    'text' => 'Usuarios',
+                    'url'  => 'usuarios',
+                    'icon' => 'fas fa-user-tie',
+                ],
+                [
+                    'text' => 'Lista',
+                    'url'  => 'listausuarios',
+                    'icon' => 'fas fa-edit',
+                ],
+            ],
+        ],
+        [
+            'text'    => 'Clientes',
+            'icon'    => 'fas fa-user-friends',
+            'url'     => '#',
+            'submenu' => [
+                [
+                    'text' => 'Preregistro',
+                    'url'  => 'preregistro',
+                    'icon' => 'fas fa-plus-square',
+                ],
+                [
+                    'text' => 'Alta',
+                    'url'  => 'altacliente',
+                    'icon' => 'fas fa-plus-square',
+                ],
+                [
+                    'text' => 'Lista',
+                    'url'  => 'clientes',
+                    'icon' => 'fas fa-user-friends',
+                ],
+                [
+                    'text' => 'Seguro',
+                    'url'  => 'seguro',
+                    'icon' => 'fas fa-heartbeat',
+                ],
+
+                [
+                    'text' => 'Baja',
+                    'url'  => 'bajacliente',
+                    'icon' => 'fas fa-minus-square',
+                ],
+                [
+                    'text' => 'Edicion',
+                    'url'  => 'edicioncliente',
+                    'icon' => 'fas fa-edit',
+                ],
+
+            ],
+
+        ],
+        [
+            'text'    => 'Asistencias',
+            'icon'    => 'fas fa-user-friends',
+            'url'     => '#',
+            'submenu' => [
+                [
+                    'text' => 'Asistencia Alberca',
+                    'url'  => 'asistenciaalberca',
+                    'icon' => 'fas fa-calendar-plus',
+                ],
+                [
+                    'text' => 'Asistencia Gimnasio',
+                    'url'  => 'asistenciagimnasio',
+                    'icon' => 'fas fa-calendar-check',
+                ],
+                [
+                    'text' => 'Historico asistencias',
+                    'url'  => 'historicoasistencias',
+                    'icon' => 'fas fa-calendar-check',
+                ],
+                [
+                    'text' => 'Agenda',
+                    'url'  => 'agenda',
+                    'icon' => 'fas fa-calendar-plus',
+                ],
+
+                [
+                    'text' => 'Reagendar',
+                    'url'  => 'reagendar',
+                    'icon' => 'fas fa-calendar-check',
+                ],
+            ],
+        ],
+
+        [
+            'text'    => 'Pagos',
+            'icon'    => 'fas fa-money-bill-wave',
+            'url'     => '#',
+            'submenu' => [
+                [
+                    'text' => 'Registrar pago',
+                    'url'  => 'registropagos',
+                    'icon' => 'fas fa-cash-register',
+                ],
+                [
+                    'text' => 'Historico de pagos',
+                    'url'  => 'historicodepagos',
+                    'icon' => 'fas fa-clipboard-list',
+                ],
+            ],
+
+        ],
+        [
             'text'    => 'Ventas',
             'icon'    => 'fas fa-shopping-cart',
             'url'     => '#',
@@ -329,42 +439,12 @@ return [
                             'icon' => 'fas fa-file-signature',
                             'url'  => 'remisiones',
                         ],
-                        [
-                            'text' => 'Corte de caja',
-                            'icon' => 'fas fa-money-bill-wave',
-                            'url'  => 'cortedecaja',
-                        ],
+
                     ],
                 ],
             ],
         ],
-        // [
-        //     'text'    => 'CxC',
-        //     'icon'    => 'fas fa-money-bill-wave',
-        //     'url'     => '#',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'Crear CxC',
-        //             'icon' => 'fas fa-file-invoice-dollar', // Ideal para creación
-        //             'url'  => 'crearcxc',
-        //         ],
-        //         [
-        //             'text' => 'Abono CxC',
-        //             'icon' => 'fas fa-hand-holding-usd', // Dinero recibido
-        //             'url'  => 'abonocxc',
-        //         ],
-        //         [
-        //             'text' => 'Reporte CxC',
-        //             'icon' => 'fas fa-chart-line', // Gráficos o reportes
-        //             'url'  => 'reportecxc',
-        //         ],
-        //         // [
-        //         //     'text' => 'CxP Cliente',
-        //         //     'icon' => 'fas fa-file-invoice-dollar',
-        //         //     'url'  => 'cxpcliente',
-        //         // ],
-        //     ],
-        // ],
+
         [
             'text'    => 'Almacén',
             'icon'    => 'fas fa-warehouse',
@@ -422,114 +502,6 @@ return [
                 ],
             ],
 
-        ],
-        [
-            'text'    => 'Asistencias',
-            'icon'    => 'fas fa-user-friends',
-            'url'     => '#',
-            'submenu' => [
-                 [
-                    'text' => 'Asistencia Alberca',
-                    'url'  => 'asistenciaalberca',
-                    'icon' => 'fas fa-calendar-plus',
-                ],
-                [
-                    'text' => 'Asistencia Gimnasio',
-                    'url'  => 'asistenciagimnasio',
-                    'icon' => 'fas fa-calendar-check',
-                ],
-                [
-                    'text' => 'Historico asistencias',
-                    'url'  => 'historicoasistencias',
-                    'icon' => 'fas fa-calendar-check',
-                ],
-            ]
-        ],
-        [
-            'text'    => 'Clientes',
-            'icon'    => 'fas fa-user-friends',
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Agenda',
-                    'url'  => 'agenda',
-                    'icon' => 'fas fa-calendar-plus',
-                ],
-                [
-                    'text' => 'Reagendar',
-                    'url'  => 'reagendar',
-                    'icon' => 'fas fa-calendar-check',
-                ],
-                [
-                    'text' => 'Preregistro',
-                    'url'  => 'preregistro',
-                    'icon' => 'fas fa-plus-square',
-                ],
-                [
-                    'text' => 'Alta',
-                    'url'  => 'altacliente',
-                    'icon' => 'fas fa-plus-square',
-                ],
-                [
-                    'text' => 'Baja',
-                    'url'  => 'bajacliente',
-                    'icon' => 'fas fa-minus-square',
-                ],
-                [
-                    'text' => 'Edicion',
-                    'url'  => 'edicioncliente',
-                    'icon' => 'fas fa-edit',
-                ],
-                [
-                    'text' => 'Lista',
-                    'url'  => 'clientes',
-                    'icon' => 'fas fa-user-friends',
-                ],
-                [
-                    'text' => 'Seguro',
-                    'url'  => 'seguro',
-                    'icon' => 'fas fa-heartbeat',
-                ],
-
-            ],
-
-        ],
-        [
-            'text'    => 'Pagos',
-            'icon'    => 'fas fa-money-bill-wave',
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Registrar pago',
-                    'url'  => 'registropagos',
-                    'icon' => 'fas fa-cash-register',
-                ],
-                [
-                    'text' => 'Historico de pagos',
-                    'url'  => 'historicodepagos',
-                    'icon' => 'fas fa-clipboard-list',
-                ],
-            ],
-
-        ],
-
-        [
-            'text'    => 'Usuarios',
-            'icon'    => 'fas fa-user-tie',
-
-            'url'     => '#',
-            'submenu' => [
-                [
-                    'text' => 'Usuarios',
-                    'url'  => 'usuarios',
-                    'icon' => 'fas fa-user-tie',
-                ],
-                [
-                    'text' => 'Lista',
-                    'url'  => 'listausuarios',
-                    'icon' => 'fas fa-edit',
-                ],
-            ],
         ],
 
         [
